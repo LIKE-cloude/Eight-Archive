@@ -32,6 +32,9 @@
     <Text Include="开发文档.txt">
       <Filter>资源文件</Filter>
     </Text>
+    <Text Include="help.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

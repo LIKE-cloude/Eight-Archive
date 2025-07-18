@@ -1873,7 +1873,7 @@ void juqing(string name)
 }
 void help()
 {
-    initgraph(800, 600);
+    /*initgraph(800, 600);
     //SetWorkingImage(NULL);
     //setbkcolor(WHITE);
     cleardevice();
@@ -1883,7 +1883,18 @@ void help()
     outtextxy(300, 200, s);
     cleardevice();
     Sleep(3000);
-    //closegraph();
+    //closegraph();*/
+    wstring_convert<codecvt_utf8<wchar_t>> converter;
+    wifstream file("help.txt");
+    file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+    BeginBatchDraw();
+	fillrectangle(200, 100, 600, 500);
+    wstring filenerong=L"";
+	file >> filenerong;
+    settextcolor(BLACK);
+	outtextxy(200, 100, filenerong.c_str());
+    FlushBatchDraw();
+    getawait();
 }
 void game()
 {
@@ -1897,8 +1908,8 @@ void game()
 }
 int main()
 {
-    mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
-    juqing("image/0001/0001.txt");
+    //mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
+    //juqing("image/0001/0001.txt");
     IMAGE p1, p2,p22, screen0, screen1, screen2, screen3;
     IMAGE button111, button112, button121, button122, button131, button132;
     IMAGE button211, button212, button221, button222;
@@ -2105,7 +2116,6 @@ int main()
                         break;
                     case 3:
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
-                        closegraph();
                         help();
                         break;
                     default:
@@ -2160,7 +2170,6 @@ int main()
                     break;
                 case 3:
                     mciSendString(_T("stop movie"), NULL, 0, NULL);
-                    closegraph();
                     help();
                     break;
                 default:

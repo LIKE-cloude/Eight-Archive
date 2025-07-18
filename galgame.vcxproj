@@ -132,6 +132,7 @@
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="help.txt" />
     <Text Include="image\0001\0001.txt" />
     <Text Include="image\0002\0001.txt" />
     <Text Include="剧情的规范书写.txt" />
