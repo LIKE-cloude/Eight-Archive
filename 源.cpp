@@ -1889,10 +1889,16 @@ void help()
     file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
     BeginBatchDraw();
 	fillrectangle(200, 100, 600, 500);
-    wstring filenerong=L"";
-	file >> filenerong;
+    wstring filenerong=L"",really;
+	//file >> filenerong;
     settextcolor(BLACK);
-	outtextxy(200, 100, filenerong.c_str());
+    setbkmode(TRANSPARENT);
+    while(getline(file, filenerong))
+    {
+		really += filenerong;
+        really += L"\n";
+	}
+	outtextxy(200, 100, really.c_str());
     FlushBatchDraw();
     getawait();
 }
