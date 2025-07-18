@@ -553,7 +553,7 @@ void juqing(string name)
                             default:
                                 break;
                             }
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                             if (!where)
                             {
                                 setfillcolor(YELLOW);
@@ -666,7 +666,7 @@ void juqing(string name)
                                                     default:
                                                         break;
                                                     }
-                                                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                                     if (reallyout != L"")
                                                     {
                                                         slow(reallyout);
@@ -698,7 +698,7 @@ void juqing(string name)
                                                     default:
                                                         break;
                                                     }
-                                                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                                     putimage(300, 100, &theload);
                                                     slow(L"恭喜获得：" + theloadname);
                                                     getawait();
@@ -764,7 +764,7 @@ void juqing(string name)
                                             default:
                                                 break;
                                             }
-                                            DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                            DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                             slow(thefind);
                                             getawait();
                                         }
@@ -855,7 +855,7 @@ void juqing(string name)
                                                     default:
                                                         break;
                                                     }
-                                                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                                     if (reallyout != L"")
                                                     {
                                                         slow(reallyout);
@@ -887,7 +887,7 @@ void juqing(string name)
                                                     default:
                                                         break;
                                                     }
-                                                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                                     putimage(300, 100, &theload);
                                                     slow(L"恭喜获得：" + theloadname);
                                                     getawait();
@@ -953,7 +953,7 @@ void juqing(string name)
                                             default:
                                                 break;
                                             }
-                                            DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                            DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                             slow(thefind);
                                             getawait();
                                         }
@@ -1005,7 +1005,7 @@ void juqing(string name)
                         default:
                             break;
                         }
-                        DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                        DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                         setfillcolor(YELLOW);
                         fillrectangle(20, 190, 780, 210 + howfbtall);
                         settextcolor(BLACK);
@@ -1070,6 +1070,13 @@ void juqing(string name)
                                                 loadimage(&theload, theloaddress.c_str(), 200, 200);
                                                 cleardevice();
                                                 putimage(0, 0, &screen);
+                                                if (reallyout != L"")
+                                                {
+                                                    slow(reallyout);
+                                                    getawait();
+                                                }
+                                                cleardevice();
+                                                putimage(0, 0, &screen);
                                                 switch (hnum)
                                                 {
                                                 case 1:
@@ -1094,14 +1101,7 @@ void juqing(string name)
                                                 default:
                                                     break;
                                                 }
-                                                DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
-                                                if (reallyout != L"")
-                                                {
-                                                    slow(reallyout);
-                                                    getawait();
-                                                }
-                                                cleardevice();
-                                                putimage(0, 0, &screen);
+                                                DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                                 putimage(300, 100, &theload);
                                                 slow(L"恭喜获得：" + theloadname);
                                                 getawait();
@@ -1167,7 +1167,7 @@ void juqing(string name)
                                         default:
                                             break;
                                         }
-                                        DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                                        DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                                         slow(thefind);
                                         getawait();
                                     }
@@ -1263,7 +1263,7 @@ void juqing(string name)
                             putimage(x1, 150, &player11, SRCPAINT);
                             putimage(x2, 150, &player22, SRCAND);
                             putimage(x2, 150, &player21, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
                             Sleep(10);
                         }
@@ -1281,7 +1281,7 @@ void juqing(string name)
                             putimage(x2, 150, &player21, SRCPAINT);
                             putimage(x3, 150, &player32, SRCAND);
                             putimage(x3, 150, &player31, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
                             Sleep(10);
                         }
@@ -1297,7 +1297,7 @@ void juqing(string name)
                             putimage(0, 0, &screen);
                             putimage(x, 150, &player12, SRCAND);
                             putimage(x, 150, &player11, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128); 
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200); 
                             outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
 							Sleep(10);
@@ -1323,7 +1323,7 @@ void juqing(string name)
                                 putimage(x1, 150, &player11, SRCPAINT);
                                 putimage(x2, 150, &player22, SRCAND);
                                 putimage(x2, 150, &player21, SRCPAINT);
-                                DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                                DrawAlphaBlueRect(0, 370, 800, 230, 200);
                                 outtextxy(10, 371, lastname.c_str());
                                 FlushBatchDraw();
                                 Sleep(10);
@@ -1337,7 +1337,7 @@ void juqing(string name)
                                 putimage(x1, 150, &player11, SRCPAINT);
                                 putimage(x2, 150, &player22, SRCAND);
                                 putimage(x2, 150, &player21, SRCPAINT);
-                                DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                                DrawAlphaBlueRect(0, 370, 800, 230, 200);
                                 outtextxy(10, 371, lastname.c_str());
                                 FlushBatchDraw();
                                 Sleep(10);
@@ -1365,7 +1365,7 @@ void juqing(string name)
                                 putimage(x2, 150, &player21, SRCPAINT);
                                 putimage(x3, 150, &player32, SRCAND);
                                 putimage(x3, 150, &player31, SRCPAINT);
-                                DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                                DrawAlphaBlueRect(0, 370, 800, 230, 200);
                                 outtextxy(10, 371, lastname.c_str());
                                 FlushBatchDraw();
                                 Sleep(10);
@@ -1381,7 +1381,7 @@ void juqing(string name)
                                 putimage(x2, 150, &player21, SRCPAINT);
                                 putimage(x3, 150, &player32, SRCAND);
                                 putimage(x3, 150, &player31, SRCPAINT);
-                                DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                                DrawAlphaBlueRect(0, 370, 800, 230, 200);
                                 outtextxy(10, 371, lastname.c_str());
                                 FlushBatchDraw();
                                 Sleep(10);
@@ -1397,7 +1397,7 @@ void juqing(string name)
                                 putimage(x2, 150, &player21, SRCPAINT);
                                 putimage(x3, 150, &player32, SRCAND);
                                 putimage(x3, 150, &player31, SRCPAINT);
-                                DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                                DrawAlphaBlueRect(0, 370, 800, 230, 200);
                                 outtextxy(10, 371, lastname.c_str());
                                 FlushBatchDraw();
                                 Sleep(10);
@@ -1496,7 +1496,7 @@ void juqing(string name)
                             putimage(0, 0, &screen);
                             putimage(x, 150, &player12, SRCAND);
                             putimage(x, 150, &player11, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
                             outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
                             Sleep(10);
@@ -1513,7 +1513,7 @@ void juqing(string name)
                             putimage(x1, 150, &player11, SRCPAINT);
 							putimage(x2, 150, &player22, SRCAND);
 							putimage(x2, 150, &player21, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
                             outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
                             Sleep(10);
@@ -1532,7 +1532,7 @@ void juqing(string name)
                             putimage(x2, 150, &player21, SRCPAINT);
 							putimage(x3, 150, &player32, SRCAND);
 							putimage(x3, 150, &player31, SRCPAINT);
-                            DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
                             outtextxy(10, 371, lastname.c_str());
                             FlushBatchDraw();
                             Sleep(10);
@@ -1566,7 +1566,7 @@ void juqing(string name)
 						putimage(0, 0, &screen);
                         putimage(x, 150, &player12, SRCAND);
                         putimage(x, 150, &player11, SRCPAINT);
-                        DrawAlphaBlueRect(0, 370, 800, 230, 128);
+                        DrawAlphaBlueRect(0, 370, 800, 230, 200);
                         outtextxy(10, 371, lastname.c_str());
                         FlushBatchDraw();
                         Sleep(10);
@@ -1615,7 +1615,7 @@ void juqing(string name)
                 default:
                     break;
                 }
-                DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                 for (int x = -textwidth(screenname.c_str()); x <= 0; x += 10)
                 {
                     cleardevice();
@@ -1644,7 +1644,7 @@ void juqing(string name)
                     default:
                         break;
                     }
-                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                     solidrectangle(x, 100, x + textwidth(screenname.c_str()), 117);
                     settextcolor(BLACK);
                     outtextxy(x, 101, screenname.c_str());
@@ -1677,7 +1677,7 @@ void juqing(string name)
                 default:
                     break;
                 }
-                DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                 solidrectangle(0, 100, textwidth(screenname.c_str()), 117);
                 settextcolor(BLACK);
                 outtextxy(0, 101, screenname.c_str());
@@ -1711,7 +1711,7 @@ void juqing(string name)
                     default:
                         break;
                     }
-                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                     solidrectangle(x, 100, x + textwidth(screenname.c_str()), 117);
                     settextcolor(BLACK);
                     outtextxy(x, 101, screenname.c_str());
@@ -1744,7 +1744,7 @@ void juqing(string name)
                 default:
                     break;
                 }
-                DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                 FlushBatchDraw();
             }
             if (thetagname == L"introduce")
@@ -1797,7 +1797,7 @@ void juqing(string name)
                     putimage(0, 0, &screen);
                     putimage(x, 150, &player12, SRCAND);
                     putimage(x, 150, &player11, SRCPAINT);
-                    DrawAlphaBlueRect(0, 370, 800, 230, 128); outtextxy(10, 371, lastname.c_str());
+                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
                     outtextxy(10, 371, lastname.c_str());
                     Sleep(10);
                     FlushBatchDraw();
@@ -1851,7 +1851,7 @@ void juqing(string name)
             default:
                 break;
             }
-            DrawAlphaBlueRect(0, 370, 800, 230, 128);
+            DrawAlphaBlueRect(0, 370, 800, 230, 200);
             wstring whatfind, nowname;
             for (int i = 0; i < line.length(); i++)
             {
