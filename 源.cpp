@@ -1,6 +1,7 @@
 #include<easyx.h>
 #include<fstream>
 #include<iostream>//
+#include <sstream>
 #include <locale>
 #include <Windows.h>
 #include <mmsystem.h>
@@ -75,8 +76,9 @@ void DrawAlphaImage(IMAGE* image, int x, int y, BYTE alpha)
     BLENDFUNCTION bf = { AC_SRC_OVER, 0, alpha, 0 };
     AlphaBlend(hdcDst, x, y, w, h, hdcSrc, 0, 0, w, h, bf);
 }
-struct player
+class player
 {
+public:
     int math;
     int chinese;
 	int english;
@@ -89,6 +91,95 @@ struct player
 	int computer;//计算机
 	int pe;//体育
     wstring name;
+    player(string panbieming)
+    {
+        if (panbieming != " ")
+        {
+            string fileadress="image/date/",line;
+			fileadress += panbieming;
+            fileadress += ".txt";
+            wstring_convert<codecvt_utf8<wchar_t>> converter;
+            ifstream file(fileadress);
+            file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+            stringstream buffer;
+            buffer << file.rdbuf();
+            line == buffer.str();
+            int shangyici=0,dijige=0;
+            for(int i = 0; i < line.length(); i++)
+            {
+                
+                if(line==" ")
+                {
+                    string jicun = "";
+                    switch (dijige)
+                    {
+                    case 0:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+						math = stoi(jicun);
+                        break;
+                    case 1:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        chinese = stoi(jicun);
+                        break;
+                    case 2:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        english = stoi(jicun);
+                        break;
+                    case 3:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        history = stoi(jicun);
+                        break;
+                    case 4:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        geography = stoi(jicun);
+                        break;
+                    case 5:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        politics = stoi(jicun);
+                        break;
+                    case 6:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        biology = stoi(jicun);
+                        break;
+                    case 7:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        chemistry = stoi(jicun);
+                        break;
+                    case 8:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        physics = stoi(jicun); 
+                        break;
+                    case 9:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        computer = stoi(jicun);
+                        break;
+                    case 10:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        pe = stoi(jicun);
+                        break;
+                    case 11:
+                        for (int j = shangyici; j < i; j++)
+                            name = line[j];
+                        break;
+                    default:
+                        break;
+                    }
+                }
+			}
+        }
+
+    }
     void attribute(wstring  whats, int yunsuanshu, bool isplus = 1)
     {
         if (whats == L"math")
@@ -272,11 +363,11 @@ struct player
                     return 0;
     }
 }
-self{},
-lihaoxuan{20,20,20,20,20,20,20,20,20,10,20,L"李皓轩"},//程序代号lhx
-lizhuoyang{ 20,20,20,20,20,20,20,20,20,10,20,L"李卓阳" },//程序代号lzy
-zhaojionghe{ 20,20,20,20,20,20,20,20,20,10,20,L"赵炯赫" },//程序代号zjh
-bishujun{ 20,20,20,20,20,20,20,20,20,10,20,L"毕书俊" };//程序代号bsj
+self{"self"},
+lihaoxuan{"lhx"},//程序代号lhx
+lizhuoyang{ "lzy"},//程序代号lzy
+zhaojionghe{ "zjh"},//程序代号zjh
+bishujun{"bsj"};//程序代号bsj
 wstring findTagtext( wstring input) 
 {
 	wstring willfind;   
@@ -1898,7 +1989,29 @@ void help()
 		really += filenerong;
         really += L"\n";
 	}
-	outtextxy(200, 100, really.c_str());
+	int x = 200, y = 100;
+    for (int i = 0; i < really.length(); i++)
+    {
+        
+        if (x+23>600)
+        {
+            x = 200;
+            y += 15;
+            i--;
+        }
+        else
+        {
+            wstring now;
+            now = really[i];
+            x += 13;
+            outtextxy(x, y, now.c_str());
+            x += textwidth(now.c_str());
+        }
+    }
+    //outtextxy(200, 100, filenerong.c_str());
+    //settextcolor(BLACK);
+    //setbkmode(TRANSPARENT);
+	//
     FlushBatchDraw();
     getawait();
 }
@@ -1962,11 +2075,18 @@ int main()
     ///
     BOOL filehave;
     fstream file;
-    file.open("E:/异世界传奇/Debug/0001", ios::binary);
+    file.open("image/date/self.txt");
     if (!file)
         filehave = 0;
     else
-        filehave = 1;
+    {
+        string filenerong;
+        file >> filenerong;
+        if (filenerong == "")
+            filehave = 0;
+        else
+			filehave = 1;
+    }
     file.close();
     ExMessage msg{ 0 };
     int b = 1;
@@ -1994,7 +2114,7 @@ int main()
             putimage(0, 350, &button312, SRCAND);
             putimage(0, 350, &button311, SRCPAINT);
             putimage(0, 400, &button412, SRCAND);
-            putimage(0, 400, &button412, SRCPAINT);
+            putimage(0, 400, &button411, SRCPAINT);
             FlushBatchDraw();
             break;
         case 1:
