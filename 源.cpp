@@ -1963,6 +1963,7 @@ void juqing(string name)
             getawait();
         }
     }
+    file.close();
 }
 void help()
 {
@@ -2237,6 +2238,22 @@ int main()
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         closegraph();
                         juqing("image/0001/0001.txt");
+                        file.open("image/date/self.txt", ios::in);
+                        if (file) 
+                        {
+                            // 文件存在，清空内容
+                            file.close();
+                            file.open("image/date/self.txt", ios::out | ios::trunc);
+                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file.close();
+                        }
+                        else 
+                        {
+                            file.open("image/date/self.txt", ios::out);
+                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file.close();
+                        }
+						filehave = 1;
                         break;
                     case 2:
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
@@ -2291,6 +2308,22 @@ int main()
                     mciSendString(_T("stop movie"), NULL, 0, NULL);
                     closegraph();
                     juqing("image/0001/0001.txt");
+                    file.open("image/date/self.txt", ios::in);
+                    if (file) 
+                    {
+                        // 文件存在，清空内容
+                        file.close();
+                        file.open("image/date/self.txt", ios::out | ios::trunc);
+                        file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                        file.close();
+                    }
+                    else 
+                    {
+                        file.open("image/date/self.txt", ios::out);
+                        file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                        file.close();
+                    }
+                    filehave = 1;
                     break;
                 case 2:
                     mciSendString(_T("stop movie"), NULL, 0, NULL);
