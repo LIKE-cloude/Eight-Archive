@@ -135,6 +135,11 @@
     <Text Include="help.txt" />
     <Text Include="image\0001\0001.txt" />
     <Text Include="image\0002\0001.txt" />
+    <Text Include="image\date\bsj.txt" />
+    <Text Include="image\date\lhx.txt" />
+    <Text Include="image\date\lzy.txt" />
+    <Text Include="image\date\self.txt" />
+    <Text Include="image\date\zjh.txt" />
     <Text Include="剧情的规范书写.txt" />
     <Text Include="开发文档.txt" />
   </ItemGroup>

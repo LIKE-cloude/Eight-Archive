@@ -99,16 +99,14 @@ public:
 			fileadress += panbieming;
             fileadress += ".txt";
             wstring_convert<codecvt_utf8<wchar_t>> converter;
-            ifstream file(fileadress);
+            fstream file(fileadress);
             file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
-            stringstream buffer;
-            buffer << file.rdbuf();
-            line == buffer.str();
+			getline(file, line);
             int shangyici=0,dijige=0;
             for(int i = 0; i < line.length(); i++)
             {
                 
-                if(line==" ")
+                if (line[i] == ' ')
                 {
                     string jicun = "";
                     switch (dijige)
@@ -170,13 +168,17 @@ public:
                         break;
                     case 11:
                         for (int j = shangyici; j < i; j++)
-                            name = line[j];
+                            jicun += line[j];
+                        name = stringToWstring(jicun);
                         break;
                     default:
                         break;
                     }
+					shangyici = i + 1;
+                    dijige++;
                 }
 			}
+            file.close();
         }
 
     }

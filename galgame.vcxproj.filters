@@ -35,6 +35,21 @@
     <Text Include="help.txt">
       <Filter>资源文件</Filter>
     </Text>
+    <Text Include="image\date\bsj.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="image\date\lhx.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="image\date\lzy.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="image\date\self.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="image\date\zjh.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
