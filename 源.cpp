@@ -7,7 +7,6 @@
 #include <mmsystem.h>
 #include <string>
 #include <vector>
-#include <locale>
 #include <codecvt>
 #include <conio.h>
 
@@ -75,6 +74,17 @@ void DrawAlphaImage(IMAGE* image, int x, int y, BYTE alpha)
 
     BLENDFUNCTION bf = { AC_SRC_OVER, 0, alpha, 0 };
     AlphaBlend(hdcDst, x, y, w, h, hdcSrc, 0, 0, w, h, bf);
+}
+bool isPointInParallelogram(const POINT pts[4], POINT p)
+{
+    // 叉积法：点在四边形内，需在每条边的同侧
+    int cross1 = (pts[1].x - pts[0].x) * (p.y - pts[0].y) - (pts[1].y - pts[0].y) * (p.x - pts[0].x);
+    int cross2 = (pts[2].x - pts[1].x) * (p.y - pts[1].y) - (pts[2].y - pts[1].y) * (p.x - pts[1].x);
+    int cross3 = (pts[3].x - pts[2].x) * (p.y - pts[2].y) - (pts[3].y - pts[2].y) * (p.x - pts[2].x);
+    int cross4 = (pts[0].x - pts[3].x) * (p.y - pts[3].y) - (pts[0].y - pts[3].y) * (p.x - pts[3].x);
+
+    // 全为正或全为负则在内部
+    return (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) ||  (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
 }
 class player
 {
@@ -2020,16 +2030,94 @@ void help()
 }
 void game()
 {
-    initgraph(800, 600);
+    /*initgraph(800, 600);
     //setbkcolor(RED);
     TCHAR s[] = _T("尚未开发！这里是游戏！");
     outtextxy(0, 0, s);
     Sleep(3000);
-    closegraph();
-
+    closegraph();*/
+    IMAGE screen;
+	loadimage(&screen, _T("image/screen/gd.jpg"), 800, 600);
+    /*POINT point1[] = { {215,300},{ 315,300 } ,{265,500} ,{165,500} };
+    POINT point2[] = { {325,300},{ 375,100 } ,{475,100} ,{425,300} };
+    POINT point3[] = { {635,300},{ 735,300 } ,{685,500} ,{585,500} };
+    POINT point1[] = { {215,300},{ 315,300 } ,{265,500} ,{165,500} };
+    POINT point2[] = { {325,300},{ 375,100 } ,{475,100} ,{425,300} };
+    POINT point3[] = { {635,300},{ 735,300 } ,{685,500} ,{585,500} };*/
+    POINT point1[] = { {100,500},{250,500  } ,{300,300} ,{150,300} };
+    POINT point2[] = { {349,300},{499,300  } ,{549,100} ,{399,100} };
+    POINT point3[] = { {550,300},{700,300  } ,{650,500} ,{500,500} };
+    setbkcolor(RGB(71,89,96));
+    int where = 0;
+    ExMessage msg{ 0 };
+    while(1)
+    {
+        BeginBatchDraw();
+        cleardevice();
+        putimage(0, 0, &screen);
+        if (where == 1)
+        {
+            setfillcolor(YELLOW);
+            fillpolygon(point1, 4);
+        }
+        else
+        {
+            setfillcolor(WHITE);
+            fillpolygon(point1, 4);
+        }
+        if (where == 2)
+        {
+            setfillcolor(YELLOW);
+            fillpolygon(point2, 4);
+        }
+        else
+        {
+            setfillcolor(WHITE);
+            fillpolygon(point2, 4);
+        }
+        if (where == 3)
+        {
+            setfillcolor(YELLOW);
+            fillpolygon(point3, 4);
+        }
+        else
+        {
+            setfillcolor(WHITE);
+            fillpolygon(point3, 4);
+        }
+        FlushBatchDraw();
+        while(peekmessage(&msg))
+        {
+            if (msg.message == WM_MOUSEMOVE)
+            {
+                POINT point = {msg.x,msg.y};
+                if (isPointInParallelogram(point1,point))
+                    where = 1;
+                else if (isPointInParallelogram(point2, point))
+                    where = 2;
+                else if (isPointInParallelogram(point3, point))
+                    where = 3;
+                else
+                    where = 0;
+            }
+            if (msg.message == WM_LBUTTONDOWN)
+            {
+                POINT point = { msg.x,msg.y };
+                if (isPointInParallelogram(point1, point))
+                    where = 1;
+                else if (isPointInParallelogram(point2, point))
+                    where = 2;
+                else if (isPointInParallelogram(point3, point))
+                    where = 3;
+                else
+                    ;
+            }
+		}
+    }
 }
 int main()
 {
+
     //mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
     //juqing("image/0001/0001.txt");
     IMAGE p1, p2,p22, screen0, screen1, screen2, screen3;
@@ -2074,7 +2162,7 @@ int main()
     outtextxy(0, 0, str1.c_str());
     */
     putimage(0, 0, &p1);
-    Sleep(3000);
+    //Sleep(3000);
     ///
     BOOL filehave;
     fstream file;
@@ -2085,7 +2173,7 @@ int main()
     {
         string filenerong;
         file >> filenerong;
-        if (filenerong == "")
+        if (filenerong.empty())
             filehave = 0;
         else
 			filehave = 1;
@@ -2300,38 +2388,54 @@ int main()
                 switch (b)
                 {
                 case 0:
-                    mciSendString(_T("stop movie"), NULL, 0, NULL);
-                    cleardevice();
-                    game();
+                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 250 && msg.y <= 300 && filehave)
+                    {
+                        mciSendString(_T("stop movie"), NULL, 0, NULL);
+                        cleardevice();
+                        game();
+                        break;
+                    }
                     break;
                 case 1:
-                    mciSendString(_T("stop movie"), NULL, 0, NULL);
-                    closegraph();
-                    juqing("image/0001/0001.txt");
-                    file.open("image/date/self.txt", ios::in);
-                    if (file) 
+                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 300 && msg.y <= 350)
                     {
-                        // 文件存在，清空内容
-                        file.close();
-                        file.open("image/date/self.txt", ios::out | ios::trunc);
-                        file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
-                        file.close();
+                        mciSendString(_T("stop movie"), NULL, 0, NULL);
+                        closegraph();
+                        juqing("image/0001/0001.txt");
+                        file.open("image/date/self.txt", ios::in);
+                        if (file)
+                        {
+                            // 文件存在，清空内容
+                            file.close();
+                            file.open("image/date/self.txt", ios::out | ios::trunc);
+                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file.close();
+                        }
+                        else
+                        {
+                            file.open("image/date/self.txt", ios::out);
+                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file.close();
+                        }
+                        filehave = 1;
+                        break;
                     }
-                    else 
-                    {
-                        file.open("image/date/self.txt", ios::out);
-                        file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
-                        file.close();
-                    }
-                    filehave = 1;
                     break;
                 case 2:
-                    mciSendString(_T("stop movie"), NULL, 0, NULL);
-                    return 0;
+                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 350 && msg.y <= 400)
+                    {
+                        mciSendString(_T("stop movie"), NULL, 0, NULL);
+                        return 0;
+                        break;
+                    }
                     break;
                 case 3:
-                    mciSendString(_T("stop movie"), NULL, 0, NULL);
-                    help();
+                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 400 && msg.y <= 450)
+                    {
+                        mciSendString(_T("stop movie"), NULL, 0, NULL);
+                        help();
+                        break;
+                    }
                     break;
                 default:
                 {
@@ -2342,6 +2446,7 @@ int main()
                     break;
                 }
                 }
+            
             //a = 0;
         }
     }
