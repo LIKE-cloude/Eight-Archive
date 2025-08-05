@@ -2104,11 +2104,54 @@ void game()
             {
                 POINT point = { msg.x,msg.y };
                 if (isPointInParallelogram(point1, point))
-                    where = 1;
+                {
+                    cleardevice();
+                    IMAGE screen1;
+                    POINT right[] = { {270,600},{800,600},{800,0},{504,0} };
+                    string filenerong;
+                    {
+                        fstream file{ "image/001/date.txt" };
+                        file >> filenerong;
+						file.close();
+                        for (int i = 1;; i++)
+                        {
+							string filename = "image/001/date/";
+                            if (i < 10)
+                                filename += "000";
+                            else if (i > 10 && i < 100)
+                                filename += "00";
+                            else if (i > 1000 && i < 10000)
+                                filename += "0";
+							filename += to_string(i);
+                            filename += ".txt";
+							file.open(filename);
+                            if (!file)
+                                break;
+                            else
+                            {
+                                string linshi;
+                                file >> linshi;
+                                filenerong += linshi;
+                                filenerong += "\n";
+							}
+                        }
+                    }
+					loadimage(&screen1, _T("image/screen/classroom2.jpg"), 800, 600);
+                    while (1)
+                    {
+						putimage(0, 0, &screen1);
+                        setfillcolor(RGB(9,52,100));
+                        solidpolygon(right, 4);
+                    }
+                }
                 else if (isPointInParallelogram(point2, point))
-                    where = 2;
+                {
+
+                }
                 else if (isPointInParallelogram(point3, point))
-                    where = 3;
+                {
+
+                }
                 else
                     ;
             }
@@ -2117,7 +2160,6 @@ void game()
 }
 int main()
 {
-
     //mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
     //juqing("image/0001/0001.txt");
     IMAGE p1, p2,p22, screen0, screen1, screen2, screen3;
@@ -2325,7 +2367,7 @@ int main()
                     case 1:
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         closegraph();
-                        juqing("image/0001/0001.txt");
+                        juqing("image/start/0001.txt");
                         file.open("image/date/self.txt", ios::in);
                         if (file) 
                         {
@@ -2401,7 +2443,7 @@ int main()
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         closegraph();
-                        juqing("image/0001/0001.txt");
+                        juqing("image/start/0001.txt");
                         file.open("image/date/self.txt", ios::in);
                         if (file)
                         {
