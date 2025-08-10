@@ -442,8 +442,12 @@ void slow(wstring str)
 {
     int  len2 = str.length() - 1;
     int x=100, y=402;
-    for (int i=0;i<=len2;i++)
+	ExMessage msg;
+    int i{ 0 };
+    BOOL isAlleady = {0};
+    while (i <= len2 && (!isAlleady))
     {
+        flushmessage();
         wstring stri;
         stri = str[i];
         if(x+13>700)
@@ -459,6 +463,29 @@ void slow(wstring str)
         }
         Sleep(90);
         FlushBatchDraw();
+        if (peekmessage(&msg, EX_KEY))//获得消息
+        {
+            FlushBatchDraw();
+            for (int j = i + 1; j <= len2; j++)
+            {
+                wstring stri;
+                stri = str[j];
+                if (x + 13 > 700)
+                {
+                    x = 100;
+                    y += 13;
+                    outtextxy(x, y, stri.c_str());
+                }
+                else
+                {
+                    outtextxy(x, y, stri.c_str());
+                    x += 13;
+                }
+                FlushBatchDraw();
+            }
+            isAlleady = 1;
+        }
+        i++;
     }
 }
 void getawait()
@@ -2106,42 +2133,35 @@ void game()
                 if (isPointInParallelogram(point1, point))
                 {
                     cleardevice();
+                    int howManyFiles = 0;
+                    int allReadyFile = 0;
                     IMAGE screen1;
-                    POINT right[] = { {270,600},{800,600},{800,0},{504,0} };
+                    POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
                     string filenerong;
-                    {
+
                         fstream file{ "image/001/date.txt" };
                         file >> filenerong;
+						allReadyFile = stoi(filenerong);
 						file.close();
-                        for (int i = 1;; i++)
+                        for(int i=1;1;i++)
                         {
-							string filename = "image/001/date/";
-                            if (i < 10)
-                                filename += "000";
-                            else if (i > 10 && i < 100)
-                                filename += "00";
-                            else if (i > 1000 && i < 10000)
-                                filename += "0";
-							filename += to_string(i);
-                            filename += ".txt";
-							file.open(filename);
+							string filename = "image/001/" + to_string(i) + ".txt";
+                            file.open(filename);
                             if (!file)
-                                break;
+								break;
                             else
                             {
-                                string linshi;
-                                file >> linshi;
-                                filenerong += linshi;
-                                filenerong += "\n";
+                                howManyFiles++;
+                                file.close();
 							}
                         }
-                    }
 					loadimage(&screen1, _T("image/screen/classroom2.jpg"), 800, 600);
                     while (1)
                     {
 						putimage(0, 0, &screen1);
                         setfillcolor(RGB(9,52,100));
                         solidpolygon(right, 4);
+                        FlushBatchDraw();
                     }
                 }
                 else if (isPointInParallelogram(point2, point))
