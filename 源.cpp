@@ -7,6 +7,7 @@
 #include <mmsystem.h>
 #include <string>
 #include <vector>
+#include <array>
 #include <codecvt>
 #include <conio.h>
 
@@ -19,6 +20,11 @@ wstring stringToWstring(const string& str)
     wstring wstr(size, 0);
     MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size);
     return wstr;
+}
+string wstringTostring(const wstring& wstr)
+{
+    wstring_convert<codecvt_utf8<wchar_t>> conv;
+    return conv.to_bytes(wstr);
 }
 void DrawAlphaBlueRect(int x, int y, int w, int h, BYTE alpha)
 {
@@ -2136,44 +2142,501 @@ void game()
                     int howManyFiles = 0;
                     int allReadyFile = 0;
                     IMAGE screen1;
-                    POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
-                    string filenerong;
-
-                        fstream file{ "image/001/date.txt" };
-                        file >> filenerong;
-						allReadyFile = stoi(filenerong);
-						file.close();
-                        for(int i=1;1;i++)
+                    //POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
+                    POINT right[] = { {270,600},{800,600},{800,0},{470,0} };
+                    vector<wstring> filenames;
+                    {
+                        wstring filenerong{ L"" };
+                        wstring_convert<codecvt_utf8<wchar_t>> converter;
+                        wifstream file;
+                        file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+                        for (int i = 1; 1; i++)
                         {
-							string filename = "image/001/" + to_string(i) + ".txt";
+                            string filename = "image/001/" + to_string(i) + ".txt";
                             file.open(filename);
                             if (!file)
-								break;
+                            {
+                                break;
+                            }
                             else
                             {
                                 howManyFiles++;
                                 file.close();
-							}
+                            }
                         }
+						file.open("image/001/date.txt");
+                        filenerong = L"";
+                        int i = -1;
+                        while (getline(file, filenerong))
+                        {
+                            if (i == -1)
+                                allReadyFile = stoi(filenerong);
+                            else
+                                filenames.push_back(filenerong);
+                            i++;
+                        }
+                        file.close();
+                    }
 					loadimage(&screen1, _T("image/screen/classroom2.jpg"), 800, 600);
-                    while (1)
+                    int  y{ 30 };
+                    int wcnm{ -1 } ;
+                    BOOL right1 = TRUE;
+                    while (right1)
                     {
+						ExMessage msg1{ 0 };
+                        cleardevice();
 						putimage(0, 0, &screen1);
                         setfillcolor(RGB(9,52,100));
                         solidpolygon(right, 4);
+                        setfillcolor(WHITE);
+                        vector<array<POINT,4>> points;
+                        int whatfuck = 0;
+                        int y1 = y;
+                        setlinecolor(YELLOW);
+                        for (int i{allReadyFile + 1}; i >= 1; i--)
+                        {
+                            
+                            setfillcolor(WHITE);
+                            if(i ==allReadyFile + 1 )
+                                setfillcolor(BLACK);
+                            POINT point[4] = { {(y1 - 1560) / -3,y1},{(y1 - 2250) / -3,y1},{((y1 + 90) - 2250) / -3,y1 + 90},{((y1 + 90) - 1560) / -3,y1 + 90} };
+                            
+                            if(wcnm==whatfuck)
+                            {
+                                fillpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+                            else
+                            {
+                                solidpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+                            
+                            array<POINT, 4> bro;
+							bro.at(0) = point[0];
+							bro.at(1) = point[1];
+							bro.at(2) = point[2];
+							bro.at(3) = point[3];
+                            points.push_back(bro);
+                            //FlushBatchDraw();
+                            y1 += 120;
+                            whatfuck++;
+                        }
+                        while (peekmessage(&msg))
+                        {
+                            if (msg.message== WM_MOUSEWHEEL)
+                            {
+                                y += msg.wheel;
+                            }
+                            if (msg.message == WM_MOUSEMOVE)
+                            {
+                                POINT point = { msg.x,msg.y };
+								BOOL findout = FALSE;
+                                for (size_t whatfucks=0; whatfucks < points.size(); whatfucks++)
+                                {
+									POINT linshinpoint[4];
+									linshinpoint[0] = points.at(whatfucks).at(0);
+									linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        wcnm = whatfucks;
+										findout = TRUE;
+                                        break;
+                                    }
+                                    
+                                }
+                                if(!findout)
+									wcnm = -1;
+                            }
+                            if (msg.message == WM_LBUTTONDOWN)
+                            {
+                                POINT point = { msg.x,msg.y };
+                                int weizhi =points.size()  ;
+                                for (size_t whatfucks = 0; whatfucks < points.size(); whatfucks++,weizhi--)
+                                {
+                                    POINT linshinpoint[4];
+                                    linshinpoint[0] = points.at(whatfucks).at(0);
+                                    linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        string wcnmlgb{ "image/001/"};
+										wcnmlgb += to_string(weizhi);
+										wcnmlgb += ".txt";
+                                        juqing(wcnmlgb);
+                                        if(weizhi> allReadyFile)
+                                        {
+                                            wstring linshi;
+											linshi += to_wstring(weizhi);
+                                            for(size_t i = 0; i < filenames.size(); i++)
+                                            {
+												linshi += L"\n";
+                                                linshi += filenames.at(i);
+											}
+                                            wfstream file;
+                                            file.open("image/001/date.txt");
+                                            file << linshi;
+                                            file.close();
+                                            allReadyFile = weizhi;
+										}
+                                    }
+
+                                }
+                            }
+                            if (msg.message == WM_RBUTTONDOWN)
+                            {
+                                right1 = FALSE;
+                            }
+                        }
                         FlushBatchDraw();
                     }
                 }
-                else if (isPointInParallelogram(point2, point))
-                {
+                if (isPointInParallelogram(point2, point))
 
-                }
-                else if (isPointInParallelogram(point3, point))
                 {
-
-                }
-                else
+                    cleardevice();
+                    int howManyFiles = 0;
+                    int allReadyFile = 0;
+                    IMAGE screen1;
+                    //POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
+                    POINT right[] = { {270,600},{800,600},{800,0},{470,0} };
+                    vector<wstring> filenames;
                     ;
+                    {
+                        wstring filenerong{ L"" };
+                        wstring_convert<codecvt_utf8<wchar_t>> converter;
+                        wifstream file;
+                        file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+                        for (int i = 1; 1; i++)
+                        {
+                            string filename = "image/002/" + to_string(i) + ".txt";
+                            file.open(filename);
+                            if (!file)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                howManyFiles++;
+                                file.close();
+                            }
+                        }
+                        file.open("image/002/date.txt");
+                        filenerong = L"";
+                        int i = -1;
+                        while (getline(file, filenerong))
+                        {
+                            if (i == -1)
+                                allReadyFile = stoi(filenerong);
+                            else
+                                filenames.push_back(filenerong);
+                            i++;
+                        }
+                        file.close();
+                    }
+                    loadimage(&screen1, _T("image/screen/tq.jpg"), 800, 600);
+                    int  y{ 30 };
+                    int wcnm{ -1 };
+					BOOL right1{ TRUE };
+                    while (right1)
+                    {
+                        ExMessage msg1{ 0 };
+                        cleardevice();
+                        putimage(0, 0, &screen1);
+                        setfillcolor(RGB(9, 52, 100));
+                        solidpolygon(right, 4);
+                        setfillcolor(WHITE);
+                        vector<array<POINT, 4>> points;
+                        int whatfuck = 0;
+                        int y1 = y;
+                        setlinecolor(YELLOW);
+                        for (int i{ allReadyFile + 1 }; i >= 1; i--)
+                        {
+
+                            setfillcolor(WHITE);
+                            if (i == allReadyFile + 1)
+                                setfillcolor(BLACK);
+                            POINT point[4] = { {(y1 - 1560) / -3,y1},{(y1 - 2250) / -3,y1},{((y1 + 90) - 2250) / -3,y1 + 90},{((y1 + 90) - 1560) / -3,y1 + 90} };
+
+                            if (wcnm == whatfuck)
+                            {
+                                fillpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+                            else
+                            {
+                                solidpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+
+                            array<POINT, 4> bro;
+                            bro.at(0) = point[0];
+                            bro.at(1) = point[1];
+                            bro.at(2) = point[2];
+                            bro.at(3) = point[3];
+                            points.push_back(bro);
+                            //FlushBatchDraw();
+                            y1 += 120;
+                            whatfuck++;
+                        }
+                        while (peekmessage(&msg))
+                        {
+                            if (msg.message == WM_MOUSEWHEEL)
+                            {
+                                y += msg.wheel;
+                            }
+                            if (msg.message == WM_MOUSEMOVE)
+                            {
+                                POINT point = { msg.x,msg.y };
+                                BOOL findout = FALSE;
+                                for (size_t whatfucks = 0; whatfucks < points.size(); whatfucks++)
+                                {
+                                    POINT linshinpoint[4];
+                                    linshinpoint[0] = points.at(whatfucks).at(0);
+                                    linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        wcnm = whatfucks;
+                                        findout = TRUE;
+                                        break;
+                                    }
+
+                                }
+                                if (!findout)
+                                    wcnm = -1;
+                            }
+                            if (msg.message == WM_LBUTTONDOWN)
+                            {
+                                POINT point = { msg.x,msg.y };
+                                int weizhi = points.size();
+                                for (size_t whatfucks = 0; whatfucks < points.size(); whatfucks++, weizhi--)
+                                {
+                                    POINT linshinpoint[4];
+                                    linshinpoint[0] = points.at(whatfucks).at(0);
+                                    linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        string wcnmlgb{ "image/002/" };
+                                        wcnmlgb += to_string(weizhi);
+                                        wcnmlgb += ".txt";
+                                        juqing(wcnmlgb);
+                                        if (weizhi > allReadyFile)
+                                        {
+                                            wstring linshi;
+                                            linshi += to_wstring(weizhi);
+                                            for (size_t i = 0; i < filenames.size(); i++)
+                                            {
+                                                linshi += L"\n";
+                                                linshi += filenames.at(i);
+                                            }
+                                            wfstream file;
+                                            file.open("image/002/date.txt");
+                                            file << linshi;
+                                            file.close();
+                                            allReadyFile = weizhi;
+                                        }
+                                    }
+
+                                }
+                            }
+                            if (msg.message == WM_RBUTTONDOWN)
+                            {
+                                right1 = FALSE;
+                            }
+                        }
+                        FlushBatchDraw();
+                    }
+                    }
+                if (isPointInParallelogram(point3, point))
+
+                {
+                    cleardevice();
+                    int howManyFiles = 0;
+                    int allReadyFile = 0;
+                    IMAGE screen1;
+                    //POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
+                    POINT right[] = { {270,600},{800,600},{800,0},{470,0} };
+                    vector<wstring> filenames;
+                    {
+                        wstring filenerong{ L"" };
+                        wstring_convert<codecvt_utf8<wchar_t>> converter;
+                        wifstream file;
+                        file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+                        for (int i = 1; 1; i++)
+                        {
+                            string filename = "image/003/" + to_string(i) + ".txt";
+                            file.open(filename);
+                            if (!file)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                howManyFiles++;
+                                file.close();
+                            }
+                        }
+                        file.open("image/003/date.txt");
+                        filenerong = L"";
+                        int i = -1;
+                        while (getline(file, filenerong))
+                        {
+                            if (i == -1)
+                                allReadyFile = stoi(filenerong);
+                            else
+                                filenames.push_back(filenerong);
+                            i++;
+                        }
+                        file.close();
+                    }
+                    loadimage(&screen1, _T("image/screen/playgrand.jpg"), 800, 600);
+                    int  y{ 30 };
+                    int wcnm{ -1 };
+                    BOOL right1 = 1;
+                    while (right1)
+                    {
+                        ExMessage msg1{ 0 };
+                        cleardevice();
+                        putimage(0, 0, &screen1);
+                        setfillcolor(RGB(9, 52, 100));
+                        solidpolygon(right, 4);
+                        setfillcolor(WHITE);
+                        vector<array<POINT, 4>> points;
+                        int whatfuck = 0;
+                        int y1 = y;
+                        setlinecolor(YELLOW);
+                        for (int i{ allReadyFile + 1 }; i >= 1; i--)
+                        {
+
+                            setfillcolor(WHITE);
+                            if (i == allReadyFile + 1)
+                                setfillcolor(BLACK);
+                            POINT point[4] = { {(y1 - 1560) / -3,y1},{(y1 - 2250) / -3,y1},{((y1 + 90) - 2250) / -3,y1 + 90},{((y1 + 90) - 1560) / -3,y1 + 90} };
+
+                            if (wcnm == whatfuck)
+                            {
+                                fillpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+                            else
+                            {
+                                solidpolygon(point, 4);
+                                setbkmode(TRANSPARENT);
+                                settextcolor(BLACK);
+                                if (i == allReadyFile + 1)
+                                    settextcolor(WHITE);
+                                outtextxy(((y1 - 1560) / -3), (y1 + 38), filenames.at(i - 1).c_str());
+                            }
+
+                            array<POINT, 4> bro;
+                            bro.at(0) = point[0];
+                            bro.at(1) = point[1];
+                            bro.at(2) = point[2];
+                            bro.at(3) = point[3];
+                            points.push_back(bro);
+                            //FlushBatchDraw();
+                            y1 += 120;
+                            whatfuck++;
+                        }
+                        while (peekmessage(&msg))
+                        {
+                            if (msg.message == WM_MOUSEWHEEL)
+                            {
+                                y += msg.wheel;
+                            }
+                            if (msg.message == WM_MOUSEMOVE)
+                            {
+                                POINT point = { msg.x,msg.y };
+                                BOOL findout = FALSE;
+                                for (size_t whatfucks = 0; whatfucks < points.size(); whatfucks++)
+                                {
+                                    POINT linshinpoint[4];
+                                    linshinpoint[0] = points.at(whatfucks).at(0);
+                                    linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        wcnm = whatfucks;
+                                        findout = TRUE;
+                                        break;
+                                    }
+
+                                }
+                                if (!findout)
+                                    wcnm = -1;
+                            }
+                            if (msg.message == WM_LBUTTONDOWN)
+                            {
+                                POINT point = { msg.x,msg.y };
+                                int weizhi = points.size();
+                                for (size_t whatfucks = 0; whatfucks < points.size(); whatfucks++, weizhi--)
+                                {
+                                    POINT linshinpoint[4];
+                                    linshinpoint[0] = points.at(whatfucks).at(0);
+                                    linshinpoint[1] = points.at(whatfucks).at(1);
+                                    linshinpoint[2] = points.at(whatfucks).at(2);
+                                    linshinpoint[3] = points.at(whatfucks).at(3);
+                                    if (isPointInParallelogram(linshinpoint, point))
+                                    {
+                                        string wcnmlgb{ "image/003/" };
+                                        wcnmlgb += to_string(weizhi);
+                                        wcnmlgb += ".txt";
+                                        juqing(wcnmlgb);
+                                        if (weizhi > allReadyFile)
+                                        {
+                                            wstring linshi;
+                                            linshi += to_wstring(weizhi);
+                                            for (size_t i = 0; i < filenames.size(); i++)
+                                            {
+                                                linshi += L"\n";
+                                                linshi += filenames.at(i);
+                                            }
+                                            wfstream file;
+                                            file.open("image/003/date.txt");
+                                            file << linshi;
+                                            file.close();
+                                            allReadyFile = weizhi;
+                                        }
+                                    }
+
+                                }
+                            }
+                            if (msg.message == WM_RBUTTONDOWN)
+                            {
+								right1 = FALSE;
+                            }
+                        }
+                        FlushBatchDraw();
+                    }
+                    }
             }
 		}
     }
@@ -2182,13 +2645,13 @@ int main()
 {
     //mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
     //juqing("image/0001/0001.txt");
-    IMAGE p1, p2,p22, screen0, screen1, screen2, screen3;
+    IMAGE p1, p2, p22, screen0, screen1, screen2, screen3;
     IMAGE button111, button112, button121, button122, button131, button132;
     IMAGE button211, button212, button221, button222;
     IMAGE button311, button312, button321, button322;
     IMAGE button411, button412, button421, button422;
     loadimage(&p1, _T("image/frist taitel.png"));//
-    loadimage(&p2, _T("image/qbz.JPG"),300,250);
+    loadimage(&p2, _T("image/qbz.JPG"), 300, 250);
     loadimage(&p22, _T("image/qbz2.png"), 300, 250);
     loadimage(&button111, _T("image/button/button1 1 1.png"));
     loadimage(&button112, _T("image/button/button1 1 2.png"));
@@ -2211,7 +2674,7 @@ int main()
     loadimage(&button412, _T("image/button/button4 1 2.png"));
     loadimage(&button421, _T("image/button/button4 2 1.png"));
     loadimage(&button422, _T("image/button/button4 2 2.png"));
-    
+
     loadimage(&screen0, _T("image/screen/screen0.jpg"), 800, 600);
     loadimage(&screen1, _T("image/screen/screen1.jpg"), 800, 600);
     loadimage(&screen2, _T("image/screen/screen2.jpg"), 800, 600);
@@ -2227,18 +2690,20 @@ int main()
     //Sleep(3000);
     ///
     BOOL filehave;
-    fstream file;
+    wstring_convert<codecvt_utf8<wchar_t>> converter;
+    wfstream file;
+    file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
     file.open("image/date/self.txt");
     if (!file)
         filehave = 0;
     else
     {
-        string filenerong;
+        wstring filenerong;
         file >> filenerong;
         if (filenerong.empty())
             filehave = 0;
         else
-			filehave = 1;
+            filehave = 1;
     }
     file.close();
     ExMessage msg{ 0 };
@@ -2251,7 +2716,7 @@ int main()
         cleardevice();
         /*initgraph(800, 600);*/
 
-        
+
         switch (b)
         {
         case 0:
@@ -2389,21 +2854,21 @@ int main()
                         closegraph();
                         juqing("image/start/0001.txt");
                         file.open("image/date/self.txt", ios::in);
-                        if (file) 
+                        if (file)
                         {
                             // 文件存在，清空内容
                             file.close();
                             file.open("image/date/self.txt", ios::out | ios::trunc);
-                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
                         }
-                        else 
+                        else
                         {
                             file.open("image/date/self.txt", ios::out);
-                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
                         }
-						filehave = 1;
+                        filehave = 1;
                         break;
                     case 2:
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
@@ -2450,7 +2915,7 @@ int main()
                 switch (b)
                 {
                 case 0:
-                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 250 && msg.y <= 300 && filehave)
+                    if (msg.x >= 0 && msg.x <= 300 && msg.y >= 250 && msg.y <= 300 && filehave)
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         cleardevice();
@@ -2459,7 +2924,7 @@ int main()
                     }
                     break;
                 case 1:
-                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 300 && msg.y <= 350)
+                    if (msg.x >= 0 && msg.x <= 300 && msg.y >= 300 && msg.y <= 350)
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         closegraph();
@@ -2470,13 +2935,13 @@ int main()
                             // 文件存在，清空内容
                             file.close();
                             file.open("image/date/self.txt", ios::out | ios::trunc);
-                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
                         }
                         else
                         {
                             file.open("image/date/self.txt", ios::out);
-                            file << "20 20 20 20 20 20 20 20 20 20 20 自己 ";
+                            file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
                         }
                         filehave = 1;
@@ -2484,7 +2949,7 @@ int main()
                     }
                     break;
                 case 2:
-                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 350 && msg.y <= 400)
+                    if (msg.x >= 0 && msg.x <= 300 && msg.y >= 350 && msg.y <= 400)
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         return 0;
@@ -2492,7 +2957,7 @@ int main()
                     }
                     break;
                 case 3:
-                    if(msg.x >= 0 && msg.x <= 300 && msg.y >= 400 && msg.y <= 450)
+                    if (msg.x >= 0 && msg.x <= 300 && msg.y >= 400 && msg.y <= 450)
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         help();
@@ -2508,7 +2973,7 @@ int main()
                     break;
                 }
                 }
-            
+
             //a = 0;
         }
     }
