@@ -107,12 +107,110 @@ public:
 	int computer;//¼ÆËã»ú
 	int pe;//ÌåÓý
     wstring name;
-    player(string panbieming)
+	string panbieming;
+    void toBeStart(string panbieming1)
     {
-        if (panbieming != " ")
+        if (panbieming1 != " ")
         {
+            panbieming = panbieming1;
+            string fileadress = "image/date/", line;
+            fileadress += panbieming1;
+            fileadress += ".txt";
+            wstring_convert<codecvt_utf8<wchar_t>> converter;
+            fstream file(fileadress);
+            file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+            getline(file, line);
+            int shangyici = 0, dijige = 0;
+            for (int i = 0; i < line.length(); i++)
+            {
+
+                if (line[i] == ' ')
+                {
+                    string jicun = "";
+                    switch (dijige)
+                    {
+                    case 0:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        math = stoi(jicun);
+                        break;
+                    case 1:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        chinese = stoi(jicun);
+                        break;
+                    case 2:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        english = stoi(jicun);
+                        break;
+                    case 3:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        history = stoi(jicun);
+                        break;
+                    case 4:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        geography = stoi(jicun);
+                        break;
+                    case 5:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        politics = stoi(jicun);
+                        break;
+                    case 6:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        biology = stoi(jicun);
+                        break;
+                    case 7:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        chemistry = stoi(jicun);
+                        break;
+                    case 8:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        physics = stoi(jicun);
+                        break;
+                    case 9:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        computer = stoi(jicun);
+                        break;
+                    case 10:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        pe = stoi(jicun);
+                        break;
+                    case 11:
+                        for (int j = shangyici; j < i; j++)
+                            jicun += line[j];
+                        name = stringToWstring(jicun);
+                        break;
+                    default:
+                        break;
+                    }
+                    shangyici = i + 1;
+                    dijige++;
+                }
+            }
+            file.close();
+        }
+        else if (panbieming1 == " " || panbieming1 == "")
+        {
+            panbieming = "";
+        }
+
+    }
+    player(string panbieming1)
+    {
+        if (panbieming1 != " ")
+        {
+            panbieming = panbieming1;
             string fileadress="image/date/",line;
-			fileadress += panbieming;
+			fileadress += panbieming1;
             fileadress += ".txt";
             wstring_convert<codecvt_utf8<wchar_t>> converter;
             fstream file(fileadress);
@@ -548,7 +646,15 @@ void juqing(string name)
     FlushBatchDraw();
     //Sleep(3000);
     setbkmode(TRANSPARENT);
-    wstring players = L"", lastname = L"";
+    vector<player> players{};
+	players.push_back(lizhuoyang);
+    players.push_back(lizhuoyang);
+    players.push_back(lizhuoyang);
+	players.at(0).toBeStart("");
+    players.at(1).toBeStart("");
+	players.at(2).toBeStart("");
+    
+    //wstring players = L"", lastname = L"";
     while (getline(file, line))
     {
         cleardevice();
@@ -562,7 +668,85 @@ void juqing(string name)
         player12.Resize(0, 0);
         player22.Resize(0, 0);
         player32.Resize(0, 0);
-        for (int i = 0; i < players.length(); i++)
+        for (size_t i = 0; i < 3; i++) 
+        {
+            if(players.at(i).panbieming == "")
+            {
+                if ((i + 1) != 3)
+                {
+                    if (players.at(i + 1).panbieming != "")
+                    {
+                        players.at(i) = players.at(i + 1);
+                        players.at(i + 1).toBeStart("");
+                    }
+                }
+			}
+        }
+        for (size_t i = 0; i < 3; i++)
+        {
+            if (players.at(i).panbieming != "")
+            {
+                string linshijicun1 = "image/player/" + players.at(i).panbieming + "1.jpg";
+                string linshijicun2 = "image/player/" + players.at(i).panbieming + "2.jpg";
+                if(i==0)
+                {
+                    loadimage(&player11, stringToWstring(linshijicun1).c_str(), 200, 366);
+                    loadimage(&player12, stringToWstring(linshijicun2).c_str(), 200, 366);
+                }
+                if (i == 1)
+                {
+                    loadimage(&player21, stringToWstring(linshijicun1).c_str(), 200, 366);
+                    loadimage(&player22, stringToWstring(linshijicun2).c_str(), 200, 366);
+                }
+                if (i == 2)
+                {
+                    loadimage(&player31, stringToWstring(linshijicun1).c_str(), 200, 366);
+                    loadimage(&player32, stringToWstring(linshijicun2).c_str(), 200, 366);
+                }
+            }
+        }
+        wstring lastname = L"";
+        //int howmany = 0;
+        for (size_t i = 0; i < 3; i++)
+        {
+            if (players.at(i).panbieming != "")
+            {
+                if(hnum!=0)
+                {
+                    lastname += L"¡¢";
+                    lastname += players.at(i).name;
+                }
+                else if (hnum == 0)
+                {
+                    lastname += players.at(i).name;
+                }
+                hnum++;
+            }
+        }
+        switch (hnum)
+        {
+        case 1:
+            putimage(300, 150, &player12, SRCAND);
+            putimage(300, 150, &player11, SRCPAINT);
+            break;
+        case 2:
+            putimage(200, 150, &player12, SRCAND);
+            putimage(200, 150, &player11, SRCPAINT);
+            putimage(400, 150, &player22, SRCAND);
+            putimage(400, 150, &player21, SRCPAINT);
+            break;
+        case 3:
+            putimage(100, 150, &player12, SRCAND);
+            putimage(100, 150, &player11, SRCPAINT);
+            putimage(300, 150, &player22, SRCAND);
+            putimage(300, 150, &player21, SRCPAINT);
+            putimage(500, 150, &player32, SRCAND);
+            putimage(500, 150, &player31, SRCPAINT);
+            break;
+        default:
+            break;
+        }
+        /*for (int i = 0; i < players.length(); i++)
         {
             if (players[i] == L' ')
             {
@@ -590,7 +774,7 @@ void juqing(string name)
                 }
 
             }
-        }
+        }*/
 
         if (line[0] == '<')
         {
@@ -685,7 +869,6 @@ void juqing(string name)
                                 putimage(500, 150, &player32, SRCAND);
                                 putimage(500, 150, &player31, SRCPAINT);
                                 break;
-
                             default:
                                 break;
                             }
@@ -798,7 +981,6 @@ void juqing(string name)
                                                         putimage(500, 150, &player32, SRCAND);
                                                         putimage(500, 150, &player31, SRCPAINT);
                                                         break;
-
                                                     default:
                                                         break;
                                                     }
@@ -830,7 +1012,6 @@ void juqing(string name)
                                                         putimage(500, 150, &player32, SRCAND);
                                                         putimage(500, 150, &player31, SRCPAINT);
                                                         break;
-
                                                     default:
                                                         break;
                                                     }
@@ -896,7 +1077,6 @@ void juqing(string name)
                                                 putimage(500, 150, &player32, SRCAND);
                                                 putimage(500, 150, &player31, SRCPAINT);
                                                 break;
-
                                             default:
                                                 break;
                                             }
@@ -987,7 +1167,6 @@ void juqing(string name)
                                                         putimage(500, 150, &player32, SRCAND);
                                                         putimage(500, 150, &player31, SRCPAINT);
                                                         break;
-
                                                     default:
                                                         break;
                                                     }
@@ -1019,7 +1198,6 @@ void juqing(string name)
                                                         putimage(500, 150, &player32, SRCAND);
                                                         putimage(500, 150, &player31, SRCPAINT);
                                                         break;
-
                                                     default:
                                                         break;
                                                     }
@@ -1085,7 +1263,6 @@ void juqing(string name)
                                                 putimage(500, 150, &player32, SRCAND);
                                                 putimage(500, 150, &player31, SRCPAINT);
                                                 break;
-
                                             default:
                                                 break;
                                             }
@@ -1137,7 +1314,6 @@ void juqing(string name)
                             putimage(500, 150, &player32, SRCAND);
                             putimage(500, 150, &player31, SRCPAINT);
                             break;
-
                         default:
                             break;
                         }
@@ -1233,7 +1409,6 @@ void juqing(string name)
                                                     putimage(500, 150, &player32, SRCAND);
                                                     putimage(500, 150, &player31, SRCPAINT);
                                                     break;
-
                                                 default:
                                                     break;
                                                 }
@@ -1299,7 +1474,6 @@ void juqing(string name)
                                             putimage(500, 150, &player32, SRCAND);
                                             putimage(500, 150, &player31, SRCPAINT);
                                             break;
-
                                         default:
                                             break;
                                         }
@@ -1318,7 +1492,7 @@ void juqing(string name)
             {
 
                 wstring thetagtext = findTagtext(line);
-                wstring caozuo, player = L" ";
+                wstring caozuo, player = L"";
                 for (int i = 0; i < thetagtext.length(); i++)
                     if (thetagtext[i] == ' ')
                     {
@@ -1329,9 +1503,10 @@ void juqing(string name)
                     }
                 if (caozuo == L"load")
                 {
-                    players += player;
+                    ::player linshi{ wstringTostring(player) };
+                    //players += player;
                     hnum++;
-                    for (int i = 0; i < player.length(); i++)
+                    /*for (int i = 0; i < player.length(); i++)
                     {
                         if (player[i] == L' ')
                         {
@@ -1386,6 +1561,37 @@ void juqing(string name)
                             }
                             break;
                         }
+                    }*/
+                    for (size_t i = 0; i < 3; i++)
+                    {
+                        if (players.at(i).panbieming == "")
+                        {
+                            players.at(i) = linshi;
+                            break;
+                        }
+                    }
+                    for (size_t i = 0; i < 3; i++)
+                    {
+                        if (players.at(i).panbieming != "")
+                        {
+                            string linshijicun1 = "image/player/" + players.at(i).panbieming + "1.jpg";
+                            string linshijicun2 = "image/player/" + players.at(i).panbieming + "2.jpg";
+                            if (i == 0)
+                            {
+                                loadimage(&player11, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player12, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 1)
+                            {
+                                loadimage(&player21, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player22, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 2)
+                            {
+                                loadimage(&player31, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player32, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                        }
                     }
                     if (hnum - 1 == 1)
                     {
@@ -1423,7 +1629,7 @@ void juqing(string name)
                         }
                     }
                 }
-                if (caozuo == L"delete")
+                else if (caozuo == L"delete")
                 {
                     if (hnum == 1)
                     {
@@ -1441,16 +1647,14 @@ void juqing(string name)
                     }
                     else if (hnum == 2)
                     {
-                        int where = 0, pos = players.find(player);
-                        for (int i = 0; i < players.length(); i++)
-                            if (players[i] == L' ')
-                            {
-                                where++;
-                                if (i == pos)
-                                    break;
-                            }
+                        int where = 0;
+                        for (size_t i = 0; i < 3; i++)
+                        {
+                            if (players.at(i).panbieming == wstringTostring(player))
+                                where = i;
+                        }
                         int x1 = 200, x2 = 400;
-                        if (where == 1)
+                        if (where == 0)
                             for (; x1 >= -200; x1 -= 20, x2 -= 10)
                             {
                                 cleardevice();
@@ -1464,7 +1668,7 @@ void juqing(string name)
                                 FlushBatchDraw();
                                 Sleep(10);
                             }
-                        if (where == 2)
+                        if (where == 1)
                             for (; x2 <= 800; x1 += 10, x2 += 20)
                             {
                                 cleardevice();
@@ -1481,16 +1685,14 @@ void juqing(string name)
                     }
                     else if (hnum == 3)
                     {
-                        int where = 0, pos = players.find(player);
-                        for (int i = 0; i < players.length(); i++)
-                            if (players[i] == L' ')
-                            {
-                                where++;
-                                if (i == pos)
-                                    break;
-                            }
+                        int where = 0;
+                        for (size_t i = 0; i < 3; i++)
+                        {
+                            if (players.at(i).panbieming == wstringTostring(player))
+                                where = i;
+                        }
                         int x1 = 100, x2 = 300, x3 = 500;
-                        if (where == 1)
+                        if (where == 0)
                             for (; x1 >= -200; x1 -= 30, x2 -= 10, x3 -= 10)
                             {
                                 cleardevice();
@@ -1506,7 +1708,7 @@ void juqing(string name)
                                 FlushBatchDraw();
                                 Sleep(10);
                             }
-                        if (where == 2)
+                        if (where == 1)
                             for (; x2 >= -200; x1 += 4, x2 -= 20, x3 -= 4)
                             {
                                 cleardevice();
@@ -1522,7 +1724,7 @@ void juqing(string name)
                                 FlushBatchDraw();
                                 Sleep(10);
                             }
-                        if (where == 3)
+                        if (where == 2)
                             for (; x3 <= 800; x1 += 10, x2 += 10, x3 += 30)
                             {
                                 cleardevice();
@@ -1539,91 +1741,16 @@ void juqing(string name)
                                 Sleep(10);
                             }
                     }
-                    if (players.find(player) != wstring::npos)
+                    for (size_t i = 0; i < 3; i++)
                     {
-                        int pos = players.find(player);
-                        players.erase(pos, player.length());
-                    }
-                    if (player == L" lhx")
-                    {
-                        if (lastname.find(L"Àîð©Ðù") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"Àîð©Ðù");
-                            lastname.erase(pos, 3);
-                        }
-                        if (lastname.find(L"&&Àîð©Ðù") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"&&Àîð©Ðù");
-                            lastname.erase(pos, 5);
-                        }
-                    }
-                    else if (player == L" lzy")
-                    {
-                        if (lastname.find(L"Àî×¿Ñô") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"Àî×¿Ñô");
-                            lastname.erase(pos, 3);
-                        }
-                        if (lastname.find(L"&&Àî×¿Ñô") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"&&Àî×¿Ñô");
-                            lastname.erase(pos, 5);
-                        }
-                    }
-                    else if (player == L" zjh")
-                    {
-                        if (lastname.find(L"ÕÔ¾¼ºÕ") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"ÕÔ¾¼ºÕ");
-                            lastname.erase(pos, 3);
-                        }
-                        if (lastname.find(L"&&ÕÔ¾¼ºÕ") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"&&ÕÔ¾¼ºÕ");
-                            lastname.erase(pos, 5);
-                        }
-                    }
-                    else if (player == L" bsj")
-                    {
-                        if (lastname.find(L"±ÏÊé¿¡") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"±ÏÊé¿¡");
-                            lastname.erase(pos, 3);
-                        }
-                        if (lastname.find(L"&&±ÏÊé¿¡") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"&&±ÏÊé¿¡");
-                            lastname.erase(pos, 5);
-                        }
-                    }
-                    else if (player != L" bsj" && player != L" lhx" && player != L" lzy" && player != L" zjh")
-                    {
-                        if (lastname.find(L"NPC") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"NPC");
-                            lastname.erase(pos, 3);
-                        }
-                        if (lastname.find(L"&&NPC") != wstring::npos)
-                        {
-                            int pos = lastname.find(L"&&NPC");
-                            lastname.erase(pos, 5);
-                        }
+                        if (players.at(i).panbieming == wstringTostring(player))
+                            players.at(i).toBeStart("");
                     }
                 }
-                if (caozuo == L"dload")
+                else if (caozuo == L"dload")
                 {
-                    players = L"";
-                    players += player;
-                    if (player == L" lhx")
-                        lastname = L"Àîð©Ðù";
-                    else if (player == L" lzy")
-                        lastname = L"Àî×¿Ñô";
-                    else if (player == L" zjh")
-                        lastname = L"ÕÔ¾¼ºÕ";
-                    else if (player == L" bsj")
-                        lastname = L"±ÏÊé¿¡";
-                    else if (player != L" bsj" && player != L" lhx" && player != L" lzy" && player != L" zjh")
-                        lastname = L"NPC";
+                    for (size_t i = 0; i < 3; i++)
+                        players.at(i).toBeStart("");
                     if (hnum == 1)
                     {
                         for (int x = 300; x >= -200; x -= 10)
@@ -1681,21 +1808,31 @@ void juqing(string name)
                     player12.Resize(0, 0);
                     player22.Resize(0, 0);
                     player32.Resize(0, 0);
-                    for (int i = 0; i < players.length(); i++)
+                    players.at(0).toBeStart(wstringTostring(player));
+                    for (size_t i = 0; i < 3; i++)
                     {
-                        if (players[i] == L' ')
+                        if (players.at(i).panbieming != "")
                         {
-                            wstring linshijicun1 = L"image/player/", linshijicun2;
-                            for (int j = i + 1; players[j] != L' ' && j < players.length(); j++)
-                                linshijicun1 += players[j];
-                            linshijicun2 = linshijicun1;
-                            linshijicun1 += L"1.jpg";
-                            linshijicun2 += L"2.jpg";
-                            loadimage(&player11, linshijicun1.c_str(), 200, 366);
-                            loadimage(&player12, linshijicun2.c_str(), 200, 366);
-
+                            string linshijicun1 = "image/player/" + players.at(i).panbieming + "1.jpg";
+                            string linshijicun2 = "image/player/" + players.at(i).panbieming + "2.jpg";
+                            if (i == 0)
+                            {
+                                loadimage(&player11, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player12, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 1)
+                            {
+                                loadimage(&player21, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player22, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 2)
+                            {
+                                loadimage(&player31, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player32, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
                         }
                     }
+                    lastname = players.at(0).name;
                     for (int x = 800; x >= 300; x -= 10)
                     {
                         cleardevice();
@@ -1747,7 +1884,6 @@ void juqing(string name)
                     putimage(500, 150, &player32, SRCAND);
                     putimage(500, 150, &player31, SRCPAINT);
                     break;
-
                 default:
                     break;
                 }
@@ -1776,7 +1912,6 @@ void juqing(string name)
                         putimage(500, 150, &player32, SRCAND);
                         putimage(500, 150, &player31, SRCPAINT);
                         break;
-
                     default:
                         break;
                     }
@@ -1809,7 +1944,6 @@ void juqing(string name)
                     putimage(500, 150, &player32, SRCAND);
                     putimage(500, 150, &player31, SRCPAINT);
                     break;
-
                 default:
                     break;
                 }
@@ -1843,7 +1977,6 @@ void juqing(string name)
                         putimage(500, 150, &player32, SRCAND);
                         putimage(500, 150, &player31, SRCPAINT);
                         break;
-
                     default:
                         break;
                     }
@@ -1876,7 +2009,6 @@ void juqing(string name)
                     putimage(500, 150, &player32, SRCAND);
                     putimage(500, 150, &player31, SRCPAINT);
                     break;
-
                 default:
                     break;
                 }
@@ -1886,7 +2018,7 @@ void juqing(string name)
             if (thetagname == L"introduce")
             {
                 wstring thetagtext = findTagtext(line);
-                wstring player, introduce;
+                wstring player=L"", introduce;
                 for (int i = 0; i < thetagtext.length(); i++)
                     if (thetagtext[i] == ' ')
                     {
@@ -1895,52 +2027,133 @@ void juqing(string name)
                         for (int j = i + 1; j < thetagtext.length(); j++)
                             introduce += thetagtext[j];
                     }
-                players += L' ';
-                players += player;
-                hnum = 1;
-                for (int i = 0; i < players.length(); i++)
+                //hnum = 1;
                 {
-                    if (players[i] == L' ')
+                    for (size_t i = 0; i < 3; i++)
+                        players.at(i).toBeStart("");
+                    if (hnum == 1)
                     {
-                        wstring linshijicun1 = L"image/player/", linshijicun2, nowname;
-                        for (int j = i + 1; players[j] != L' ' && j < players.length(); j++)
+                        for (int x = 300; x >= -200; x -= 10)
                         {
-                            nowname += players[j];
-                            linshijicun1 += players[j];
+                            cleardevice();
+                            putimage(0, 0, &screen);
+                            putimage(x, 150, &player12, SRCAND);
+                            putimage(x, 150, &player11, SRCPAINT);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
+                            outtextxy(10, 371, lastname.c_str());
+                            FlushBatchDraw();
+                            Sleep(10);
                         }
-                        if (nowname == L"lhx")
-                            lastname = L"Àîð©Ðù";
-                        else if (nowname == L"lzy")
-                            lastname = L"Àî×¿Ñô";
-                        else if (nowname == L"zjh")
-                            lastname = L"ÕÔ¾¼ºÕ";
-                        else if (nowname == L"bsj")
-                            lastname = L"±ÏÊé¿¡";
-                        else if (nowname != L"bsj" && nowname != L"lhx" && nowname != L"lzy" && nowname != L"zjh")
-                            lastname = L"NPC";
-                        linshijicun2 = linshijicun1;
-                        linshijicun1 += L"1.jpg";
-                        linshijicun2 += L"2.jpg";
-                        loadimage(&player11, linshijicun1.c_str(), 200, 366);
-                        loadimage(&player12, linshijicun2.c_str(), 200, 366);
-                        hnum++;
+                    }
+                    else if (hnum == 2)
+                    {
+                        int x1 = 200, x2 = 400;
+                        for (; x2 >= -200; x1 -= 40, x2 -= 60)
+                        {
+                            cleardevice();
+                            putimage(0, 0, &screen);
+                            putimage(x1, 150, &player12, SRCAND);
+                            putimage(x1, 150, &player11, SRCPAINT);
+                            putimage(x2, 150, &player22, SRCAND);
+                            putimage(x2, 150, &player21, SRCPAINT);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
+                            outtextxy(10, 371, lastname.c_str());
+                            FlushBatchDraw();
+                            Sleep(10);
+                        }
+                    }
+                    else if (hnum == 3)
+                    {
+                        int x1 = 100, x2 = 300, x3 = 500;
+                        for (; x3 >= -200; x1 -= 30, x2 -= 50, x3 -= 70)
+                        {
+                            cleardevice();
+                            putimage(0, 0, &screen);
+                            putimage(x1, 150, &player12, SRCAND);
+                            putimage(x1, 150, &player11, SRCPAINT);
+                            putimage(x2, 150, &player22, SRCAND);
+                            putimage(x2, 150, &player21, SRCPAINT);
+                            putimage(x3, 150, &player32, SRCAND);
+                            putimage(x3, 150, &player31, SRCPAINT);
+                            DrawAlphaBlueRect(0, 370, 800, 230, 200);
+                            outtextxy(10, 371, lastname.c_str());
+                            FlushBatchDraw();
+                            Sleep(10);
+                        }
+                    }
+                    hnum = 1;
+                    player11.Resize(0, 0);
+                    player21.Resize(0, 0);
+                    player31.Resize(0, 0);
+                    player12.Resize(0, 0);
+                    player22.Resize(0, 0);
+                    player32.Resize(0, 0);
+                    players.at(0).toBeStart(wstringTostring(player));
+                    for (size_t i = 0; i < 3; i++)
+                    {
+                        if (players.at(i).panbieming != "")
+                        {
+                            string linshijicun1 = "image/player/" + players.at(i).panbieming + "1.jpg";
+                            string linshijicun2 = "image/player/" + players.at(i).panbieming + "2.jpg";
+                            if (i == 0)
+                            {
+                                loadimage(&player11, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player12, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 1)
+                            {
+                                loadimage(&player21, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player22, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                            if (i == 2)
+                            {
+                                loadimage(&player31, stringToWstring(linshijicun1).c_str(), 200, 366);
+                                loadimage(&player32, stringToWstring(linshijicun2).c_str(), 200, 366);
+                            }
+                        }
+                    }
+                    lastname = players.at(0).name;
+                    for (int x = 800; x >= 300; x -= 10)
+                    {
+                        cleardevice();
+                        putimage(0, 0, &screen);
+                        putimage(x, 150, &player12, SRCAND);
+                        putimage(x, 150, &player11, SRCPAINT);
+                        DrawAlphaBlueRect(0, 370, 800, 230, 200);
+                        outtextxy(10, 371, lastname.c_str());
+                        FlushBatchDraw();
+                        Sleep(10);
                     }
                 }
-                for (int x = 800; x >= 300; x -= 20)
+                cleardevice();
+                putimage(0, 0, &screen);
+                switch (hnum)
                 {
-                    wstring linshi;
-                    cleardevice();
-                    putimage(0, 0, &screen);
-                    putimage(x, 150, &player12, SRCAND);
-                    putimage(x, 150, &player11, SRCPAINT);
-                    DrawAlphaBlueRect(0, 370, 800, 230, 200); outtextxy(10, 371, lastname.c_str());
-                    outtextxy(10, 371, lastname.c_str());
-                    Sleep(10);
-                    FlushBatchDraw();
+                case 1:
+                    putimage(300, 150, &player12, SRCAND);
+                    putimage(300, 150, &player11, SRCPAINT);
+                    break;
+                case 2:
+                    putimage(200, 150, &player12, SRCAND);
+                    putimage(200, 150, &player11, SRCPAINT);
+                    putimage(400, 150, &player22, SRCAND);
+                    putimage(400, 150, &player21, SRCPAINT);
+                    break;
+                case 3:
+                    putimage(100, 150, &player12, SRCAND);
+                    putimage(100, 150, &player11, SRCPAINT);
+                    putimage(300, 150, &player22, SRCAND);
+                    putimage(300, 150, &player21, SRCPAINT);
+                    putimage(500, 150, &player32, SRCAND);
+                    putimage(500, 150, &player31, SRCPAINT);
+                    break;
+                default:
+                    break;
                 }
-                slow(introduce);
+                DrawAlphaBlueRect(0, 370, 800, 230, 200);
+                outtextxy(10, 371, lastname.c_str());
+                slow(introduce.c_str());
                 getawait();
-
             }
             if (thetagname == L"music")
             {
@@ -1983,7 +2196,6 @@ void juqing(string name)
                 putimage(500, 150, &player32, SRCAND);
                 putimage(500, 150, &player31, SRCPAINT);
                 break;
-
             default:
                 break;
             }

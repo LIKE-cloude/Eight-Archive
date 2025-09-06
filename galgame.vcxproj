@@ -141,6 +141,7 @@
     <Text Include="image\date\lzy.txt" />
     <Text Include="image\date\self.txt" />
     <Text Include="image\date\zjh.txt" />
+    <Text Include="image\start\0001.txt" />
     <Text Include="剧情的规范书写.txt" />
     <Text Include="开发文档.txt" />
   </ItemGroup>

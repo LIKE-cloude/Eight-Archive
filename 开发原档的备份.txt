@@ -1,7 +1,6 @@
 <introduce>lhx 这是一个introduce的测试</introduce>
 李皓轩 我草泥马
 <button>button1 button2/lhx/math/+100</button>摁钮1<turnto>image/0002/0001.txt<load>/神奇宝贝//special.png/<attribute>lhx/math/+2 button2
-<player>load bsj</player>
-<player>delete bsj</player>
-<screen>小卖部 hxl door.jpg<screen>
+<player>dload bsj</player>
+<screen>小卖部 IMG_3580.jpg<screen>
 <button>button1 button2/lhx/math/+100</button>摁钮1<turnto>image/0002/0001.txt<load>/神奇宝贝//special.png/<attribute>lhx/math/+2 button2
