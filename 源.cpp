@@ -2222,7 +2222,22 @@ void juqing(string name)
             }
             if (thetagname == L"pmove")
             {
-
+				wstring thetagtext = findTagname(line);
+                vector<wstring> mingling;
+                size_t weiyu = 0;
+                for (size_t i = 0; i < thetagtext.length(); i++)
+                {
+                    if(thetagtext[i]==L' '||i==(thetagtext.length()-1))
+                    {
+                        mingling.push_back(thetagtext.substr(weiyu, i - weiyu));
+                        weiyu = i + 1;
+					}
+                }
+                for (size_t i = 0; i < mingling.size(); i++)
+                {
+                    if(mingling.at(i)==L"")
+                    { }
+                }
             }
             //及记得写FlushBatchDraw();
             //和Sleep(30000);
@@ -2912,14 +2927,17 @@ int main()
 {
     //mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
     //juqing("image/0001/0001.txt");
-    IMAGE p1, p2, p22, screen0, screen1, screen2, screen3;
+    IMAGE p1,p11, p2, p22, screen0, screen1, screen2, screen3;
     IMAGE button111, button112, button121, button122, button131, button132;
     IMAGE button211, button212, button221, button222;
     IMAGE button311, button312, button321, button322;
     IMAGE button411, button412, button421, button422;
     loadimage(&p1, _T("image/frist taitel.png"));//
+    loadimage(&p11, _T("image/main taitel.png"),800,600);//
+
     loadimage(&p2, _T("image/qbz.JPG"), 300, 250);
     loadimage(&p22, _T("image/qbz2.png"), 300, 250);
+
     loadimage(&button111, _T("image/button/button1 1 1.png"));
     loadimage(&button112, _T("image/button/button1 1 2.png"));
     loadimage(&button121, _T("image/button/button1 2 1.png"));
@@ -2947,6 +2965,8 @@ int main()
     loadimage(&screen2, _T("image/screen/screen2.jpg"), 800, 600);
     loadimage(&screen3, _T("image/screen/screen3.jpg"), 800, 600);
     initgraph(800, 600);
+    HWND hwnd = GetHWnd();
+    SetWindowText(hwnd, L"Eight—Archive");
     //setbkcolor(WHITE);
     /*//
     string str="我草泥马";
@@ -2954,6 +2974,8 @@ int main()
     outtextxy(0, 0, str1.c_str());
     */
     putimage(0, 0, &p1);
+    Sleep(3000);
+    putimage(0, 0, &p11);
     Sleep(3000);
     //HWND hwnd = GetHWnd();
     
