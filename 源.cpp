@@ -10,9 +10,13 @@
 #include <array>
 #include <codecvt>
 #include <conio.h>
+#include <thread>
+#include <chrono>
+#include <math.h>
 
 #pragma comment (lib, "winmm.lib")
 #pragma comment(lib, "Msimg32.lib")
+
 using namespace std;
 wstring stringToWstring(const string& str)
 {
@@ -478,6 +482,16 @@ public:
                 else
                     return 0;
     }
+    void save()
+    {
+        wstring fileadress = L"image/date/";
+        fileadress += stringToWstring(panbieming);
+        fileadress += L".txt";
+        ofstream file(fileadress);
+        file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+        file << math << " " << chinese << " " << english << " " << history << " " << geography << " " << politics << " " << biology << " " << chemistry << " " << physics << " " << computer << " " << pe << " " << wstringTostring(name);
+        file.close();
+	}
 }
 self{"self"},
 lihaoxuan{"lhx"},//³ÌÐò´úºÅlhx
@@ -817,7 +831,7 @@ void juqing(string name)
                                     if (thesb[j] != '+' && thesb[j] != '-' && thesb[j] != '/' && num == 3)
                                         yunsuanshu += thesb[j];
                                 }
-                                if (palyer == L"lhx")
+                                /*if (palyer == L"lhx")
                                     if (lihaoxuan.attribute2(whats, stoi(yunsuanshu), isdayu))
                                         isbutton2out = 1;
                                 if (palyer == L"lzy")
@@ -831,7 +845,13 @@ void juqing(string name)
                                         isbutton2out = 1;
                                 if (palyer == L"self")
                                     if (self.attribute2(whats, stoi(yunsuanshu), isdayu))
-                                        isbutton2out = 1;
+                                        isbutton2out = 1;*/
+                                for (size_t i = 0; i < 3; i++)
+                                {
+                                    if(palyer == stringToWstring(players.at(i).panbieming))
+                                        if (players.at(i).attribute2(whats, stoi(yunsuanshu), isdayu))
+											isbutton2out = 1;
+                                }
                                 wstring thefb2;
                                 for (int l = 0; l < k; l++)
                                     thefb2 += thesb[l];
@@ -1040,7 +1060,7 @@ void juqing(string name)
                                                             yunsuanshu += thefind[j];
 
                                                     }
-                                                    if (palyer == L"lhx")
+                                                    /*if (palyer == L"lhx")
                                                         lihaoxuan.attribute(whats, stoi(yunsuanshu), isplus);
                                                     if (palyer == L"lzy")
                                                         lizhuoyang.attribute(whats, stoi(yunsuanshu), isplus);
@@ -1049,7 +1069,15 @@ void juqing(string name)
                                                     if (palyer == L"bsj")
                                                         bishujun.attribute(whats, stoi(yunsuanshu), isplus);
                                                     if (palyer == L"self")
-                                                        self.attribute(whats, stoi(yunsuanshu), isplus);
+                                                        self.attribute(whats, stoi(yunsuanshu), isplus);*/
+                                                    for(int j=0;j<3;j++)
+                                                    {
+                                                        if (palyer == stringToWstring(players.at(j).panbieming))
+                                                        {
+                                                            players.at(j).attribute(whats, stoi(yunsuanshu), isplus);
+                                                            break;
+                                                        }
+													}
                                                 }
                                             }
                                         }
@@ -1226,7 +1254,7 @@ void juqing(string name)
                                                             yunsuanshu += thefind[j];
 
                                                     }
-                                                    if (palyer == L"lhx")
+                                                    /*if (palyer == L"lhx")
                                                         lihaoxuan.attribute(whats, stoi(yunsuanshu), isplus);
                                                     if (palyer == L"lzy")
                                                         lizhuoyang.attribute(whats, stoi(yunsuanshu), isplus);
@@ -1236,6 +1264,15 @@ void juqing(string name)
                                                         bishujun.attribute(whats, stoi(yunsuanshu), isplus);
                                                     if (palyer == L"self")
                                                         self.attribute(whats, stoi(yunsuanshu), isplus);
+                                                        */
+                                                    for (int j = 0; j < 3; j++)
+                                                    {
+                                                        if (palyer == stringToWstring(players.at(j).panbieming))
+                                                        {
+                                                            players.at(j).attribute(whats, stoi(yunsuanshu), isplus);
+                                                            break;
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -1437,7 +1474,7 @@ void juqing(string name)
                                                         yunsuanshu += thefind[j];
 
                                                 }
-                                                if (palyer == L"lhx")
+                                                /*if (palyer == L"lhx")
                                                     lihaoxuan.attribute(whats, stoi(yunsuanshu), isplus);
                                                 if (palyer == L"lzy")
                                                     lizhuoyang.attribute(whats, stoi(yunsuanshu), isplus);
@@ -1446,7 +1483,15 @@ void juqing(string name)
                                                 if (palyer == L"bsj")
                                                     bishujun.attribute(whats, stoi(yunsuanshu), isplus);
                                                 if (palyer == L"self")
-                                                    self.attribute(whats, stoi(yunsuanshu), isplus);
+                                                    self.attribute(whats, stoi(yunsuanshu), isplus);*/
+                                                for (int j = 0; j < 3; j++)
+                                                {
+                                                    if (palyer == stringToWstring(players.at(j).panbieming))
+                                                    {
+                                                        players.at(j).attribute(whats, stoi(yunsuanshu), isplus);
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1744,13 +1789,19 @@ void juqing(string name)
                     for (size_t i = 0; i < 3; i++)
                     {
                         if (players.at(i).panbieming == wstringTostring(player))
+                        {
+                            players.at(i).save();
                             players.at(i).toBeStart("");
+                        }
                     }
                 }
                 else if (caozuo == L"dload")
                 {
                     for (size_t i = 0; i < 3; i++)
+                    {
+						players.at(i).save();
                         players.at(i).toBeStart("");
+                    }
                     if (hnum == 1)
                     {
                         for (int x = 300; x >= -200; x -= 10)
@@ -2166,6 +2217,10 @@ void juqing(string name)
                 mciSendString(_T("play music repeat"), NULL, 0, NULL);
             }
             if (thetagname == L"slow")
+            {
+
+            }
+            if (thetagname == L"pmove")
             {
 
             }
@@ -2899,7 +2954,9 @@ int main()
     outtextxy(0, 0, str1.c_str());
     */
     putimage(0, 0, &p1);
-    //Sleep(3000);
+    Sleep(3000);
+    //HWND hwnd = GetHWnd();
+    
     ///
     BOOL filehave;
     wstring_convert<codecvt_utf8<wchar_t>> converter;
@@ -2920,15 +2977,13 @@ int main()
     file.close();
     ExMessage msg{ 0 };
     int b = 1;
-    mciSendString(_T("open image/music/0001.mp3 Alias movie"), NULL, 0, NULL);
+    mciSendString(_T("open image/music/xg.mp3 Alias movie"), NULL, 0, NULL);
     mciSendString(_T("play movie repeat"), NULL, 0, NULL);
     while (1)
     {
         BeginBatchDraw();
         cleardevice();
         /*initgraph(800, 600);*/
-
-
         switch (b)
         {
         case 0:
@@ -3089,6 +3144,7 @@ int main()
                     case 3:
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         help();
+                        mciSendString(_T("play movie"), NULL, 0, NULL);
                         break;
                     default:
                     {
@@ -3173,6 +3229,7 @@ int main()
                     {
                         mciSendString(_T("stop movie"), NULL, 0, NULL);
                         help();
+                        mciSendString(_T("play movie"), NULL, 0, NULL);
                         break;
                     }
                     break;
