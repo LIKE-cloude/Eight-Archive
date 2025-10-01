@@ -29,7 +29,7 @@
     <Text Include="image\0002\0001.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="开发文档.txt">
+    <Text Include="开发日志.txt">
       <Filter>资源文件</Filter>
     </Text>
     <Text Include="help.txt">

@@ -581,27 +581,30 @@ void slow(wstring str)
         }
         Sleep(90);
         FlushBatchDraw();
-        if (peekmessage(&msg, EX_KEY))//获得消息
+        if (peekmessage(&msg))//获得消息
         {
-            FlushBatchDraw();
-            for (int j = i + 1; j <= len2; j++)
+            if (msg.message == WM_KEYDOWN|| msg.message == WM_LBUTTONDOWN)
             {
-                wstring stri;
-                stri = str[j];
-                if (x + 13 > 700)
-                {
-                    x = 100;
-                    y += 13;
-                    outtextxy(x, y, stri.c_str());
-                }
-                else
-                {
-                    outtextxy(x, y, stri.c_str());
-                    x += 13;
-                }
                 FlushBatchDraw();
+                for (int j = i + 1; j <= len2; j++)
+                {
+                    wstring stri;
+                    stri = str[j];
+                    if (x + 13 > 700)
+                    {
+                        x = 100;
+                        y += 13;
+                        outtextxy(x, y, stri.c_str());
+                    }
+                    else
+                    {
+                        outtextxy(x, y, stri.c_str());
+                        x += 13;
+                    }
+                    FlushBatchDraw();
+                }
+                isAlleady = 1;
             }
-            isAlleady = 1;
         }
         i++;
     }
@@ -613,7 +616,15 @@ void getawait()
     FlushBatchDraw();
     ExMessage msg;
     flushmessage();
-	getmessage(&msg, EX_KEY );
+	BOOL hhh = { 1 };
+    while(hhh)
+    {
+        if (peekmessage(&msg))
+        {
+            if (msg.message == WM_KEYDOWN|| msg.message == WM_LBUTTONDOWN)
+				hhh = 0;
+        }
+    }
     cleardevice();
 }
 /*cleardevice();
@@ -2360,20 +2371,90 @@ void game()
     POINT point2[] = { {325,300},{ 375,100 } ,{475,100} ,{425,300} };
     POINT point3[] = { {635,300},{ 735,300 } ,{685,500} ,{585,500} };*/
     POINT point1[] = { {100,500},{250,500  } ,{300,300} ,{150,300} };
-    POINT point2[] = { {349,300},{499,300  } ,{549,100} ,{399,100} };
+    POINT point2[] = { {350,300},{500,300  } ,{550,100} ,{400,100} };
     POINT point3[] = { {550,300},{700,300  } ,{650,500} ,{500,500} };
     setbkcolor(RGB(71,89,96));
     int where = 0;
     ExMessage msg{ 0 };
+    wstring_convert<codecvt_utf8<wchar_t>> converter;
+    wifstream file("image/date.txt");
+    file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
+	array<wstring, 3> namessss;
+	BOOL can2open{ TRUE }, can3open{ TRUE };
+    {
+		wstring filenerong{ L"" };
+        for (int i = 0; i < 3; i++)
+        {
+            getline(file, filenerong);
+            namessss.at(i) = filenerong;
+		}
+		file.close();
+        int howManyFiles = 0;
+        for (int i = 1; 1; i++)
+        {
+            string filename = "image/001/" + to_string(i) + ".txt";
+            file.open(filename);
+            if (!file)
+            {
+                break;
+            }
+            else
+            {
+                howManyFiles++;
+                file.close();
+            }
+        }
+        file.open("image/001/date.txt");
+        getline(file, filenerong);
+        file.close();
+        if (stoi(filenerong) != howManyFiles)
+        {
+            can2open = FALSE;
+			namessss.at(1) = L" ? ? ? ";
+            can3open = FALSE;
+            namessss.at(2) = L" ? ? ? ";
+        }
+        else
+        {
+            howManyFiles = 0;
+            for (int i = 1; 1; i++)
+            {
+                string filename = "image/002/" + to_string(i) + ".txt";
+                file.open(filename);
+                if (!file)
+                {
+                    break;
+                }
+                else
+                {
+                    howManyFiles++;
+                    file.close();
+                }
+            }
+            file.open("image/002/date.txt");
+            getline(file, filenerong);
+            file.close();
+            if (stoi(filenerong) != howManyFiles)
+            {
+                can3open = FALSE;
+                namessss.at(2) = L" ? ? ? ";
+            }
+            
+        }
+    }
     while(1)
     {
         BeginBatchDraw();
         cleardevice();
         putimage(0, 0, &screen);
+		setbkmode(TRANSPARENT);
+        settextcolor(BLACK);
         if (where == 1)
         {
             setfillcolor(YELLOW);
-            fillpolygon(point1, 4);
+            fillpolygon(point1, 4); 
+            int shuchuy{ 150-(textwidth(namessss.at(0).c_str())/2)};
+            outtextxy(shuchuy, 394, namessss.at(0).c_str());
         }
         else
         {
@@ -2384,6 +2465,8 @@ void game()
         {
             setfillcolor(YELLOW);
             fillpolygon(point2, 4);
+            int shuchuy{ 400- (textwidth(namessss.at(1).c_str()) / 2) };
+            outtextxy(shuchuy, 194, namessss.at(1).c_str());
         }
         else
         {
@@ -2394,6 +2477,8 @@ void game()
         {
             setfillcolor(YELLOW);
             fillpolygon(point3, 4);
+            int shuchuy{ 550- (textwidth(namessss.at(2).c_str()) / 2) };
+            outtextxy(shuchuy, 394, namessss.at(2).c_str());
         }
         else
         {
@@ -2584,7 +2669,7 @@ void game()
                         FlushBatchDraw();
                     }
                 }
-                if (isPointInParallelogram(point2, point))
+                if (isPointInParallelogram(point2, point) && can2open)
 
                 {
                     cleardevice();
@@ -2752,7 +2837,7 @@ void game()
                         FlushBatchDraw();
                     }
                     }
-                if (isPointInParallelogram(point3, point))
+                if (isPointInParallelogram(point3, point) && can3open)
 
                 {
                     cleardevice();
@@ -3150,12 +3235,78 @@ int main()
                             file.open("image/date/self.txt", ios::out | ios::trunc);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            {
+								wstring linshi=L"0\n";
+                                wstring wuyong = L"0\n";
+                                file.open("image/001/date.txt");
+								getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+									linshi += wuyong;
+									linshi += L"\n";
+                                }
+                                file << linshi;
+								file.close();
+                                linshi = L"0\n";
+                                file.open("image/002/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/003/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                            }
                         }
                         else
                         {
                             file.open("image/date/self.txt", ios::out);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            {
+                                wstring linshi = L"0\n";
+                                wstring wuyong = L"0\n";
+                                file.open("image/001/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/002/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/003/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                            }
                         }
                         filehave = 1;
                         break;
@@ -3227,12 +3378,78 @@ int main()
                             file.open("image/date/self.txt", ios::out | ios::trunc);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            {
+                                wstring linshi = L"0\n";
+                                wstring wuyong = L"0\n";
+                                file.open("image/001/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/002/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/003/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                            }
                         }
                         else
                         {
                             file.open("image/date/self.txt", ios::out);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            {
+                                wstring linshi = L"0\n";
+                                wstring wuyong = L"0\n";
+                                file.open("image/001/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/002/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                                linshi = L"0\n";
+                                file.open("image/003/date.txt");
+                                getline(file, wuyong);
+                                while (getline(file, wuyong))
+                                {
+                                    linshi += wuyong;
+                                    linshi += L"\n";
+                                }
+                                file << linshi;
+                                file.close();
+                            }
                         }
                         filehave = 1;
                         break;
