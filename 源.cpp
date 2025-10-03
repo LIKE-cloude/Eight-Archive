@@ -1,23 +1,27 @@
+#include <array>
+#include <chrono>
+#include <codecvt>
+#include <conio.h>
 #include<easyx.h>
 #include<fstream>
 #include<iostream>//
-#include <sstream>
 #include <locale>
-#include <Windows.h>
-#include <mmsystem.h>
-#include <string>
-#include <vector>
-#include <array>
-#include <codecvt>
-#include <conio.h>
-#include <thread>
-#include <chrono>
 #include <math.h>
+#include <mmsystem.h>
+#include <sstream>
+#include <string>
+#include <thread>
+#include <vector>
+#include <Windows.h>
 
 #pragma comment (lib, "winmm.lib")
 #pragma comment(lib, "Msimg32.lib")
 
+using std::getline;
+using std::string;
+using std::wstring;
 using namespace std;
+
 wstring stringToWstring(const string& str)
 {
     int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
@@ -487,9 +491,9 @@ public:
         wstring fileadress = L"image/date/";
         fileadress += stringToWstring(panbieming);
         fileadress += L".txt";
-        ofstream file(fileadress);
+        wofstream file(fileadress);
         file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
-        file << math << " " << chinese << " " << english << " " << history << " " << geography << " " << politics << " " << biology << " " << chemistry << " " << physics << " " << computer << " " << pe << " " << wstringTostring(name);
+        file << math << " " << chinese << " " << english << " " << history << " " << geography << " " << politics << " " << biology << " " << chemistry << " " << physics << " " << computer << " " << pe << " " << name;
         file.close();
 	}
 }
@@ -2506,8 +2510,8 @@ void game()
                 if (isPointInParallelogram(point1, point))
                 {
                     cleardevice();
-                    int howManyFiles = 0;
-                    int allReadyFile = 0;
+                    int howManyFiles{ 0 };
+                    int allReadyFile  { 0 };
                     IMAGE screen1;
                     //POINT right[] = { {270,600},{800,600},{800,0},{500,0} };
                     POINT right[] = { {270,600},{800,600},{800,0},{470,0} };
@@ -2545,8 +2549,8 @@ void game()
                         file.close();
                     }
 					loadimage(&screen1, _T("image/screen/classroom2.jpg"), 800, 600);
-                    int  y{ 30 };
-                    int wcnm{ -1 } ;
+					int  y{ 30 };//用来控制滚轮滚动
+					int wcnm{ -1 };//用来记录当前选中的文件是第几个
                     BOOL right1 = TRUE;
                     while (right1)
                     {
@@ -2557,16 +2561,21 @@ void game()
                         solidpolygon(right, 4);
                         setfillcolor(WHITE);
                         vector<array<POINT,4>> points;
-                        int whatfuck = 0;
+						int whatfuck = 0;//用来记录当前是第几个文件
                         int y1 = y;
                         setlinecolor(YELLOW);
                         for (int i{allReadyFile + 1}; i >= 1; i--)
                         {
-                            
+                            if(i>howManyFiles)
+                            {
+                                //whatfuck++;
+                                
+                                continue;
+                            }
                             setfillcolor(WHITE);
-                            if(i ==allReadyFile + 1 )
+                            if(i ==allReadyFile + 1)
                                 setfillcolor(BLACK);
-                            POINT point[4] = { {(y1 - 1560) / -3,y1},{(y1 - 2250) / -3,y1},{((y1 + 90) - 2250) / -3,y1 + 90},{((y1 + 90) - 1560) / -3,y1 + 90} };
+							POINT point[4] = { {(y1 - 1560) / -3,y1},{(y1 - 2250) / -3,y1},{((y1 + 90) - 2250) / -3,y1 + 90},{((y1 + 90) - 1560) / -3,y1 + 90} };//输出文件名的平行四边形
                             
                             if(wcnm==whatfuck)
                             {
@@ -2621,7 +2630,7 @@ void game()
                                         break;
                                     }
                                     
-                                }
+                                }//检测鼠标是否在某个框内
                                 if(!findout)
 									wcnm = -1;
                             }
@@ -3057,11 +3066,11 @@ int main()
     string str="我草泥马";
     wstring str1 = stringToWstring(str);
     outtextxy(0, 0, str1.c_str());
-    */
+    
     putimage(0, 0, &p1);
     Sleep(3000);
     putimage(0, 0, &p11);
-    Sleep(3000);
+    Sleep(3000);*/
     //HWND hwnd = GetHWnd();
     
     ///
@@ -3235,6 +3244,7 @@ int main()
                             file.open("image/date/self.txt", ios::out | ios::trunc);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            ;
                             {
 								wstring linshi=L"0\n";
                                 wstring wuyong = L"0\n";
@@ -3245,6 +3255,8 @@ int main()
 									linshi += wuyong;
 									linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/001/date.txt", ios::out | ios::trunc);
                                 file << linshi;
 								file.close();
                                 linshi = L"0\n";
@@ -3255,6 +3267,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/002/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3265,6 +3279,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/003/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                             }
@@ -3274,6 +3290,7 @@ int main()
                             file.open("image/date/self.txt", ios::out);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            ;
                             {
                                 wstring linshi = L"0\n";
                                 wstring wuyong = L"0\n";
@@ -3284,6 +3301,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/001/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3294,6 +3313,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/002/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3304,6 +3325,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/003/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                             }
@@ -3378,6 +3401,7 @@ int main()
                             file.open("image/date/self.txt", ios::out | ios::trunc);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            ;
                             {
                                 wstring linshi = L"0\n";
                                 wstring wuyong = L"0\n";
@@ -3388,6 +3412,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/001/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3398,6 +3424,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/002/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3408,6 +3436,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/003/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                             }
@@ -3417,6 +3447,7 @@ int main()
                             file.open("image/date/self.txt", ios::out);
                             file << L"20 20 20 20 20 20 20 20 20 20 20 自己 ";
                             file.close();
+                            ;
                             {
                                 wstring linshi = L"0\n";
                                 wstring wuyong = L"0\n";
@@ -3427,6 +3458,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/001/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3437,6 +3470,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/002/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                                 linshi = L"0\n";
@@ -3447,6 +3482,8 @@ int main()
                                     linshi += wuyong;
                                     linshi += L"\n";
                                 }
+                                file.close();
+                                file.open("image/003/date.txt", ios::out | ios::trunc);
                                 file << linshi;
                                 file.close();
                             }
